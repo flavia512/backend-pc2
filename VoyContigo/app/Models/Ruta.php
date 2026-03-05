@@ -5,10 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Ruta extends Model
-{
-    use HasFactory;
+class Ruta extends Model {
 
+use HasFactory;
+    protected $table = 'rutas';
     protected $fillable = [
         'user_id', 'origin_text', 'origin_lat', 'origin_lng', 
         'dest_text', 'dest_lat', 'dest_lng', 'arrival_time', 'duration_min'
@@ -17,6 +17,10 @@ class Ruta extends Model
     // Relación (N:1) - Una ruta pertenece a un usuario
     public function usuario() {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function user() {
+        return $this->belongsTo(User::class);
     }
 
     // Relaciones (1:N) - Lo que depende de esta ruta

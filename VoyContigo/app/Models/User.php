@@ -43,4 +43,5 @@ class User extends Authenticatable
     public function favoritos() {
         return $this->hasMany(Favorito::class, 'user_id');
     }
+
 }
