@@ -30,4 +30,35 @@ class RutaController extends Controller
 
         return response()->json(['message' => 'Ruta eliminada correctamente'], 200);
     }
+
+    // ENDPOINT 3: Listado de todas las rutas
+    public function index()
+    {
+        // Traemos todas las rutas junto con la info del usuario que las creó
+        $rutas = Ruta::with('usuario')->get(); 
+        
+        return response()->json([
+            'success' => true,
+            'data' => $rutas
+        ], 200);
+    }
+
+    // ENDPOINT 7: Actualizar rutas
+    public function update(Request $request, $id)
+    {
+        $ruta = Ruta::find($id);
+
+        if (!$ruta) {
+            return response()->json(['success' => false, 'message' => 'Ruta no encontrada'], 404);
+        }
+
+        // Actualizamos con los datos que vengan en el body de la petición
+        $ruta->update($request->all());
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Ruta actualizada correctamente',
+            'data' => $ruta
+        ], 200);
+    }
 }

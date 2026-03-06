@@ -39,4 +39,22 @@ class UserController extends Controller
             'puntos_totales' => $user->puntos
         ], 200);
     }
+
+    // ENDPOINT 18: Editar datos de usuarios (Admin)
+    public function update(Request $request, $id)
+    {
+        $usuario = User::find($id);
+
+        if (!$usuario) {
+            return response()->json(['success' => false, 'message' => 'Usuario no encontrado'], 404);
+        }
+
+        $usuario->update($request->all());
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Datos del usuario actualizados',
+            'data' => $usuario
+        ], 200);
+    }
 }

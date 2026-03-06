@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RutaController;
 use App\Http\Controllers\AlertaController;
+use App\Http\Controllers\FavoritoController;
+use App\Http\Controllers\ReservaController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -24,3 +26,18 @@ Route::post('/users/desactivar_alerta', [AlertaController::class, 'desactivar'])
 
 // Endpoint 22 - Aumentar puntos al usuario
 Route::put('/user/aumentar_puntos_usuario', [UserController::class, 'aumentarPuntos']);
+
+// Endpoint 3: Listado de todas las rutas (GET)
+Route::get('/rutas', [RutaController::class, 'index']);
+
+// Endpoint 7: Actualizar rutas (PUT)
+Route::put('/rutas/{id}', [RutaController::class, 'update']);
+
+// Endpoint 11: Actualizar reservas por usuario (PUT)
+Route::put('/reservas/{id}', [ReservaController::class, 'update']);
+
+// Endpoint 18: Editar datos de usuarios (Admin) (PUT)
+Route::put('/admin/usuarios/{id}', [UserController::class, 'update']);
+
+// Endpoint 25: Eliminar de favoritos (DELETE)
+Route::delete('/favoritos/{id}', [FavoritoController::class, 'destroy']);
