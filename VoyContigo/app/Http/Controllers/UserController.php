@@ -57,4 +57,24 @@ class UserController extends Controller
             'data' => $usuario
         ], 200);
     }
+    // ENDPOINT 4: Eliminar usuario con el ID especificado (DELETE)
+    // DELETE api/admin/eliminarUsuarios/{id}
+    public function eliminarUsuario($id)
+    {
+        $user = User::find($id);
+
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Usuario no encontrado'
+            ], 404);
+        }
+
+        $user->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Usuario eliminado correctamente'
+        ], 200);
+    }
 }

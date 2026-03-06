@@ -36,6 +36,12 @@ Route::put('/rutas/{id}', [RutaController::class, 'update']);
 // Endpoint 11: Actualizar reservas por usuario (PUT)
 Route::put('/reservas/{id}', [ReservaController::class, 'update']);
 
+// Endpoint 12: Crear reserva por usuario (POST)
+Route::post('/users/crear_reserva', [ReservaController::class, 'crearReserva']);
+
+// Endpoint 13: Eliminar reserva por usuario (DELETE)
+Route::delete('/users/eliminar_reserva', [ReservaController::class, 'eliminarReserva']);
+
 // Endpoint 18: Editar datos de usuarios (Admin) (PUT)
 Route::put('/admin/usuarios/{id}', [UserController::class, 'update']);
 
