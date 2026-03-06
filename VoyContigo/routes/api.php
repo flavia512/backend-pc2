@@ -47,3 +47,12 @@ Route::put('/admin/usuarios/{id}', [UserController::class, 'update']);
 
 // Endpoint 25: Eliminar de favoritos (DELETE)
 Route::delete('/favoritos/{id}', [FavoritoController::class, 'destroy']);
+
+// Endpoint 0: Crear usuario (POST)
+Route::post('/users', [UserController::class, 'store']);
+
+//Endpoint 6 Postear las rutas (POST)
+Route::post('/users/crear_rutas', [RutaController::class, 'store']);
+
+// Endpoint 14: Todas las reservas de una ruta (GET)
+Route::get('/driver/reservas', [ReservaController::class, 'reservasPorRuta']);

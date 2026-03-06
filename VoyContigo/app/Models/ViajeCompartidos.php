@@ -4,14 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ViajeCompartido extends Model
+class ViajeCompartidos extends Model
 {
     use HasFactory;
 
-    protected $table = 'viaje_compartido';
+    protected $table = 'viaje_compartidos';
 
     protected $fillable = [
-        'driver_user_id', 'route_id', 'station_name', 
+        'driver_user_id', 'route_id', 'station_name',
         'trip_datename', 'seats_total', 'seats_available', 'status'
     ];
 

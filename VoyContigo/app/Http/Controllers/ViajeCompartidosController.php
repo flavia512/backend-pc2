@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ViajeCompartido;
+use App\Models\ViajeCompartidos;
 use Illuminate\Http\Request;
 
-class ViajeCompartidoController extends Controller
+class ViajeCompartidosController extends Controller
 {
     // ENDPOINT 20: Actualizar datos de viaje compartido
     // PUT api/driver/actualizar_viaje.php?idviaje=10
     public function actualizarViaje(Request $request)
     {
         $viajeId = $request->query('idviaje');
-        $viaje = ViajeCompartido::find($viajeId);
+        $viaje = ViajeCompartidos::find($viajeId);
 
         if (!$viaje) {
             return response()->json([
@@ -52,7 +52,7 @@ class ViajeCompartidoController extends Controller
             ], 422);
         }
 
-        $viaje = ViajeCompartido::create($request->all());
+        $viaje = ViajeCompartidos::create($request->all());
 
         return response()->json([
             'success' => true,

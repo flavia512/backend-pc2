@@ -77,4 +77,32 @@ class UserController extends Controller
             'message' => 'Usuario eliminado correctamente'
         ], 200);
     }
+
+    public function store(Request $request)
+    {
+        // Validación de los campos requeridos
+        $request->validate([
+            'email'     => 'required|email|unique:users,email',
+            'full_name' => 'required|string|max:255',
+            'password'  => 'required|string|min:6',
+            'is_active' => 'sometimes|boolean',
+            'puntos'    => 'sometimes|integer|min:0',
+        ]);
+
+        // Crear el usuario en la base de datos
+        $user = User::create([
+            'email'         => $request->email,
+            'full_name'     => $request->full_name,
+            'password_hash' => bcrypt($request->password), // almacenar contraseña hasheada
+            'puntos'        => $request->puntos ?? 0,
+            'is_active'     => $request->is_active ?? true,
+            'last_login_at' => null,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Usuario creado correctamente',
+            'data'    => $user
+        ], 201);
+    }
 }

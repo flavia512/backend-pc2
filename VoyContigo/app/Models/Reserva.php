@@ -22,6 +22,6 @@ class Reserva extends Model
     }
 
     public function viaje() {
-        return $this->belongsTo(ViajeCompartido::class, 'trip_id');
+        return $this->belongsTo(ViajeCompartidos::class, 'trip_id');
     }
 }

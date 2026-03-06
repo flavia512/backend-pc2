@@ -10,7 +10,7 @@ class Ruta extends Model {
 use HasFactory;
     protected $table = 'rutas';
     protected $fillable = [
-        'user_id', 'origin_text', 'origin_lat', 'origin_lng', 
+        'user_id', 'origin_text', 'origin_lat', 'origin_lng',
         'dest_text', 'dest_lat', 'dest_lng', 'arrival_time', 'duration_min'
     ];
 
@@ -25,7 +25,7 @@ use HasFactory;
 
     // Relaciones (1:N) - Lo que depende de esta ruta
     public function viajes() {
-        return $this->hasMany(ViajeCompartido::class, 'route_id');
+        return $this->hasMany(ViajeCompartidos::class, 'route_id');
     }
 
     public function alertas() {

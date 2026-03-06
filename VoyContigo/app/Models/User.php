@@ -29,7 +29,7 @@ class User extends Authenticatable
     }
 
     public function viajesComoConductor() {
-        return $this->hasMany(ViajeCompartido::class, 'driver_user_id');
+        return $this->hasMany(ViajeCompartidos::class, 'driver_user_id');
     }
 
     public function reservas() {
