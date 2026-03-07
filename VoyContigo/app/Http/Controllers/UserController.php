@@ -7,9 +7,9 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    // ENDPOINT 1 - GET /api/users/usuario?Iduser=10
+    // ENDPOINT 1 - GET /api/users/usuario?user_id=10
     public function show(Request $request) {
-        $user = User::find($request->query('Iduser'));
+        $user = User::find($request->query('user_id'));
 
         if (!$user) {
             return response()->json(['message' => 'Usuario no encontrado'], 404);
@@ -21,11 +21,11 @@ class UserController extends Controller
     // ENDPOINT 22 - PUT /api/user/aumentar_puntos_usuario?cantidad=20
     public function aumentarPuntos(Request $request) {
         $request->validate([
-            'Iduser'   => 'required|integer',
+            'user_id'   => 'required|integer',
             'cantidad' => 'required|integer|min:1',
         ]);
 
-        $user = User::find($request->query('Iduser'));
+        $user = User::find($request->query('user_id'));
 
         if (!$user) {
             return response()->json(['message' => 'Usuario no encontrado'], 404);
@@ -77,6 +77,46 @@ class UserController extends Controller
             'message' => 'Usuario eliminado correctamente'
         ], 200);
     }
+    // ENDPOINT 2 - Get/ api/admin/lista_usuarios
+    public function listaUsuarios(){
+        $usuarios = \App\Models\User::all();
+
+        return response()->json([
+            'ok' => true,
+            'usuarios' => $usuarios
+        ], 200);
+    }
+    // ENDPOINT 23 - PUT /api/user/quitar_punto_usuarios?user_id=10&cantidad=20
+    public function quitarPuntoUsuarios(Request $request){
+        $user_id = $request->query('user_id');
+        $cantidad = $request->query('cantidad');
+
+        if (!$user_id || !$cantidad) {
+            return response()->json([
+                'ok' => false,
+                'mensaje' => 'Los parámetros user_id y cantidad son obligatorios'
+            ], 400);
+        }
+
+        $usuario = \App\Models\User::find($user_id);
+
+        if (!$usuario) {
+            return response()->json([
+                'ok' => false,
+                'mensaje' => 'Usuario no encontrado'
+            ], 404);
+        }
+
+        $usuario->puntos = max(0, $usuario->puntos - $cantidad);
+        $usuario->save();
+
+        return response()->json([
+            'ok' => true,
+            'mensaje' => 'Puntos descontados correctamente',
+            'usuario' => $usuario
+        ], 200);
+    }
+
 
     public function store(Request $request)
     {

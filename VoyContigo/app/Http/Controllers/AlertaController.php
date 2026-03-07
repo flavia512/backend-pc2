@@ -24,4 +24,24 @@ class AlertaController extends Controller
 
         return response()->json(['message' => 'Alertas desactivadas correctamente'], 200);
     }
+    // ENDPOINT 16 - GET /api/admin/obtener_alerta_usuario?user_id=10
+    public function obtenerAlertaUsuario(Request $request)
+    {
+        $user_id = $request->query('user_id');
+
+        if (!$user_id) {
+            return response()->json([
+                'ok' => false,
+                'mensaje' => 'El parámetro user_id es obligatorio'
+            ], 400);
+        }
+
+        $alertas = \App\Models\Alerta::where('user_id', $user_id)->get();
+
+        return response()->json([
+            'ok' => true,
+            'alertas' => $alertas
+        ], 200);
+    }
+
 }

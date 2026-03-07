@@ -32,7 +32,7 @@ Route::put('/user/aumentar_puntos_usuario', [UserController::class, 'aumentarPun
 Route::get('/rutas', [RutaController::class, 'index']);
 
 // Endpoint 7: Actualizar rutas (PUT)
-Route::put('/rutas/{id}', [RutaController::class, 'update']);
+Route::put('/users/update_rutas/{id}', [RutaController::class, 'update']);
 
 // Endpoint 11: Actualizar reservas por usuario (PUT)
 Route::put('/reservas/{id}', [ReservaController::class, 'update']);
@@ -57,9 +57,3 @@ Route::post('/users/crear_rutas', [RutaController::class, 'store']);
 
 // Endpoint 14: Todas las reservas de una ruta (GET)
 Route::get('/driver/reservas', [ReservaController::class, 'reservasPorRuta']);
-
-// Endpoint 21: Crear viaje compartido (POST)
-Route::post('/driver/crear_viaje', [ViajeCompartidosController::class, 'crearViaje']);
-
-// Endpoint 20: Actualizar viaje compartido (PUT)
-Route::put('/driver/actualizar_viaje', [ViajeCompartidosController::class, 'actualizarViaje']);

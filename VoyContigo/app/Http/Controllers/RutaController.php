@@ -8,9 +8,9 @@ use Illuminate\Http\Request;
 
 class RutaController extends Controller
 {
-    // ENDPOINT 5 - GET /api/users/obtener_rutas?iduser=10
+    // ENDPOINT 5 - GET /api/users/obtener_rutas?user_id=10
     public function getRutasByUser(Request $request) {
-        $rutas = Ruta::where('user_id', $request->query('iduser'))->get();
+        $rutas = Ruta::where('user_id', $request->query('user_id'))->get();
 
         if ($rutas->isEmpty()) {
             return response()->json(['message' => 'No se encontraron rutas'], 404);
@@ -45,23 +45,36 @@ class RutaController extends Controller
     }
 
     // ENDPOINT 7: Actualizar rutas
-    public function update(Request $request, $id)
-    {
-        $ruta = Ruta::find($id);
-
-        if (!$ruta) {
+    public function update(Request $request, $id) {
+        $ruta = Ruta::find($id); if (!$ruta) {
             return response()->json(['success' => false, 'message' => 'Ruta no encontrada'], 404);
-        }
-
-        // Actualizamos con los datos que vengan en el body de la petición
+        } // Actualizamos con los datos que vengan en el body de la petición
         $ruta->update($request->all());
-
         return response()->json([
             'success' => true,
             'message' => 'Ruta actualizada correctamente',
-            'data' => $ruta
+            'data' => $ruta ], 200);
+    }
+    // ENDPOINT 9 - Get /api/users/obtener_predicciones?route_id=10
+    public function obtenerPredicciones(Request $request)
+    {
+        $route_id = $request->query('route_id');
+
+        if (!$route_id) {
+            return response()->json([
+                'ok' => false,
+                'mensaje' => 'El parámetro route_id es obligatorio'
+            ], 400);
+        }
+
+        $predicciones = \App\Models\Prediccion::where('route_id', $route_id)->get();
+
+        return response()->json([
+            'ok' => true,
+            'predicciones' => $predicciones
         ], 200);
     }
+    // Endpoint 6: Crear rutas
     public function store(Request $request)
     {
         // Validación de los campos requeridos
