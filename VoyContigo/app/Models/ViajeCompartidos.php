@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class ViajeCompartidos extends Model
@@ -12,11 +13,11 @@ class ViajeCompartidos extends Model
 
     protected $fillable = [
         'driver_user_id', 'route_id', 'station_name',
-        'trip_datename', 'seats_total', 'seats_available', 'status'
+        'trip_datetime', 'seats_total', 'seats_available', 'status'
     ];
 
     protected $casts = [
-        'trip_datename' => 'datetime'
+        'trip_datetime' => 'datetime'
     ];
 
     // Relación: El viaje le pertenece a un conductor (Usuario)

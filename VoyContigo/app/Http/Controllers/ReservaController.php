@@ -61,21 +61,16 @@ class ReservaController extends Controller
         ], 201);
     }
 
-    // ENDPOINT 13: Eliminar reservas por usuario
-    // DELETE api/users/eliminar_reserva.php?user_id=10&idreserva=10
-    public function eliminarReserva(Request $request)
+    // ENDPOINT 13: Eliminar reserva por ID
+    // DELETE api/users/eliminar_reserva/{id}
+    public function eliminarReserva($id)
     {
-        $userId = $request->query('user_id');
-        $reservaId = $request->query('idreserva');
-
-        $reserva = Reserva::where('id', $reservaId)
-            ->where('user_id', $userId)
-            ->first();
+        $reserva = Reserva::find($id);
 
         if (!$reserva) {
             return response()->json([
                 'success' => false,
-                'message' => 'Reserva no encontrada para este usuario'
+                'message' => 'Reserva no encontrada'
             ], 404);
         }
 

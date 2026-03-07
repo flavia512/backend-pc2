@@ -7,6 +7,7 @@ use App\Http\Controllers\RutaController;
 use App\Http\Controllers\AlertaController;
 use App\Http\Controllers\FavoritoController;
 use App\Http\Controllers\ReservaController;
+use App\Http\Controllers\ViajeCompartidosController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -39,8 +40,8 @@ Route::put('/reservas/{id}', [ReservaController::class, 'update']);
 // Endpoint 12: Crear reserva por usuario (POST)
 Route::post('/users/crear_reserva', [ReservaController::class, 'crearReserva']);
 
-// Endpoint 13: Eliminar reserva por usuario (DELETE)
-Route::delete('/users/eliminar_reserva', [ReservaController::class, 'eliminarReserva']);
+// Endpoint 13: Eliminar reserva por ID (DELETE)
+Route::delete('/users/eliminar_reserva/{id}', [ReservaController::class, 'eliminarReserva']);
 
 // Endpoint 18: Editar datos de usuarios (Admin) (PUT)
 Route::put('/admin/usuarios/{id}', [UserController::class, 'update']);
@@ -56,3 +57,9 @@ Route::post('/users/crear_rutas', [RutaController::class, 'store']);
 
 // Endpoint 14: Todas las reservas de una ruta (GET)
 Route::get('/driver/reservas', [ReservaController::class, 'reservasPorRuta']);
+
+// Endpoint 21: Crear viaje compartido (POST)
+Route::post('/driver/crear_viaje', [ViajeCompartidosController::class, 'crearViaje']);
+
+// Endpoint 20: Actualizar viaje compartido (PUT)
+Route::put('/driver/actualizar_viaje', [ViajeCompartidosController::class, 'actualizarViaje']);

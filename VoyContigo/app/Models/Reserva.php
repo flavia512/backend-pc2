@@ -10,7 +10,6 @@ class Reserva extends Model
     use HasFactory;
 
     protected $table = 'reservas';
-    protected $primaryKey = 'reserva_id'; // Llave primaria personalizada
 
     protected $fillable = [
         'user_id', 'trip_id', 'seats', 'status'

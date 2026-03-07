@@ -7,31 +7,20 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-
-            $table->string('email')->unique()->after('id');
-            $table->string('full_name')->after('email');
-            $table->string('password_hash')->after('full_name');
-            $table->integer('puntos')->default(0)->after('password_hash');
-            $table->timestamp('last_login_at')->nullable()->after('puntos');
-            $table->boolean('is_active')->default(true)->after('last_login_at');
-
+        Schema::create('users', function (Blueprint $table) {
+            $table->id();
+            $table->string('email')->unique();
+            $table->string('full_name');
+            $table->string('password_hash');
+            $table->integer('puntos')->default(0);
+            $table->timestamp('last_login_at')->nullable();
+            $table->boolean('is_active')->default(true);
+            $table->timestamps();
         });
     }
 
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-
-            $table->dropColumn([
-                'email',
-                'full_name',
-                'password_hash',
-                'puntos',
-                'last_login_at',
-                'is_active'
-            ]);
-
-        });
+        Schema::dropIfExists('users');
     }
 };

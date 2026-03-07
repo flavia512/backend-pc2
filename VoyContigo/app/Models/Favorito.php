@@ -9,8 +9,8 @@ class Favorito extends Model
 {
     use HasFactory;
 
-    // Desactivamos updated_at porque tu tabla no la tiene
-    const UPDATED_AT = null;
+    public $timestamps = false;
+    public $incrementing = false;
 
     protected $fillable = [
         'user_id', 'route_id'
