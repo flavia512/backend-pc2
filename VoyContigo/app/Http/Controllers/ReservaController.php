@@ -86,6 +86,24 @@ class ReservaController extends Controller
             'message' => 'Reserva eliminada correctamente'
         ], 200);
     }
+    // ENDPOINT 10 - GET /api/users/crearreservas?iduser=10
+    public function obtenerReservasPorUsuario(Request $request){
+        $iduser = $request->query('iduser');
+
+        if (!$iduser) {
+            return response()->json([
+                'ok' => false,
+                'mensaje' => 'El parámetro iduser es obligatorio'
+            ], 400);
+        }
+
+        $reservas = \App\Models\Reserva::where('iduser', $iduser)->get();
+
+        return response()->json([
+            'ok' => true,
+            'reservas' => $reservas
+        ], 200);
+    }
     // Endpoint 14: Obtener todas las reservas de una ruta
     public function reservasPorRuta(Request $request)
     {

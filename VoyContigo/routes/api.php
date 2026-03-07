@@ -31,7 +31,7 @@ Route::put('/user/aumentar_puntos_usuario', [UserController::class, 'aumentarPun
 Route::get('/rutas', [RutaController::class, 'index']);
 
 // Endpoint 7: Actualizar rutas (PUT)
-Route::put('/rutas/{id}', [RutaController::class, 'update']);
+Route::put('/users/update_rutas/{id}', [RutaController::class, 'update']);
 
 // Endpoint 11: Actualizar reservas por usuario (PUT)
 Route::put('/reservas/{id}', [ReservaController::class, 'update']);
@@ -56,3 +56,21 @@ Route::post('/users/crear_rutas', [RutaController::class, 'store']);
 
 // Endpoint 14: Todas las reservas de una ruta (GET)
 Route::get('/driver/reservas', [ReservaController::class, 'reservasPorRuta']);
+
+// Enpoint 16 Obtener todas las alertas de cada usuario (GET)
+Route::get('/admin/obtener_alerta_usuario', [AlertaController::class, 'obtenerAlertaUsuario']);
+
+// Endpoint 10: Reservas por usuario (GET)
+Route::get('/users/crearreservas', [ReservaController::class, 'obtenerReservasPorUsuario']);
+
+// Endpoint 9 - Predicciones por ruta (GET)
+Route::get('/users/obtener_predicciones', [RutaController::class, 'obtenerPredicciones']);
+
+// Endpoint 2 - Listar usuarios para admin (GET)
+Route::get('/admin/lista_usuarios', [UserController::class, 'listaUsuarios']);
+
+// Endpoint 23 - Quitar puntos al usuario (PUT)
+Route::put('/user/quitar_punto_usuarios', [UserController::class, 'quitarPuntoUsuarios']);
+
+// Endpoint 4: Eliminar usuario (DELETE)
+Route::delete('/admin/eliminarUsuarios/{id}', [UserController::class, 'eliminarUsuario']);

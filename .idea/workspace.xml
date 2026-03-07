@@ -2,10 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e9a1c5fd-e3fa-4373-b23d-fcfd60a22ef4" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/laravel-idea.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/laravel-idea.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/VoyContigo/app/Http/Controllers/AlertaController.php" beforeDir="false" afterPath="$PROJECT_DIR$/VoyContigo/app/Http/Controllers/AlertaController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/VoyContigo/app/Http/Controllers/ReservaController.php" beforeDir="false" afterPath="$PROJECT_DIR$/VoyContigo/app/Http/Controllers/ReservaController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/VoyContigo/app/Http/Controllers/RutaController.php" beforeDir="false" afterPath="$PROJECT_DIR$/VoyContigo/app/Http/Controllers/RutaController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/VoyContigo/app/Http/Controllers/UserController.php" beforeDir="false" afterPath="$PROJECT_DIR$/VoyContigo/app/Http/Controllers/UserController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/VoyContigo/database/migrations/2026_03_04_122740_create_users_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/VoyContigo/database/migrations/2026_03_04_122740_create_users_table.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/VoyContigo/routes/api.php" beforeDir="false" afterPath="$PROJECT_DIR$/VoyContigo/routes/api.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -180,6 +182,7 @@
       </set>
     </attachedChunks>
   </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="e9a1c5fd-e3fa-4373-b23d-fcfd60a22ef4" name="Changes" comment="" />
@@ -195,12 +198,25 @@
       <workItem from="1772800137550" duration="1718000" />
       <workItem from="1772801882190" duration="1498000" />
       <workItem from="1772807128147" duration="2251000" />
-      <workItem from="1772809414621" duration="7239000" />
+      <workItem from="1772809414621" duration="8511000" />
+      <workItem from="1772904885058" duration="12000" />
+      <workItem from="1772910627748" duration="4329000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/VoyContigo/bootstrap/app.php</url>
+          <line>2</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>
