@@ -60,4 +60,44 @@ class ViajeCompartidosController extends Controller
             'data' => $viaje
         ], 201);
     }
+
+    // ENDPOINT: ENDPOINT 17:  Obtener datos de viaje compartido
+    // GET api/users/obtener_viajecompartido?idviaje=10
+    public function obtenerViaje(Request $request)
+    {
+        $viaje = ViajeCompartidos::find($request->query('idviaje'));
+
+        if (!$viaje) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Viaje compartido no encontrado'
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $viaje
+        ], 200);
+    }
+
+    // ENDPOINT 20: Eliminar viaje compartido
+    // DELETE api/driver/eliminar_viaje?idviaje=10
+    public function eliminarViaje(Request $request)
+    {
+        $viaje = ViajeCompartidos::find($request->query('idviaje'));
+
+        if (!$viaje) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Viaje compartido no encontrado'
+            ], 404);
+        }
+
+        $viaje->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Viaje compartido eliminado correctamente'
+        ], 200);
+    }
 }

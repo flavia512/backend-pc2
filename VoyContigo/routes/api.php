@@ -57,3 +57,15 @@ Route::post('/users/crear_rutas', [RutaController::class, 'store']);
 
 // Endpoint 14: Todas las reservas de una ruta (GET)
 Route::get('/driver/reservas', [ReservaController::class, 'reservasPorRuta']);
+
+// Endpoint 21: Crear viaje compartido (POST)
+Route::post('/driver/crear_viaje', [ViajeCompartidosController::class, 'crearViaje']);
+
+// Endpoint 19: Actualizar viaje compartido (PUT)
+Route::put('/driver/actualizar_viaje', [ViajeCompartidosController::class, 'actualizarViaje']);
+
+// Endpoint 17: Obtener datos de viaje compartido (GET)
+Route::get('/users/obtener_viajecompartido', [ViajeCompartidosController::class, 'obtenerViaje']);
+
+// Endpoint 20: Eliminar viaje compartido (DELETE)
+Route::delete('/driver/eliminar_viaje', [ViajeCompartidosController::class, 'eliminarViaje']);
