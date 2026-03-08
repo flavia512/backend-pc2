@@ -8,9 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Favorito extends Model
 {
     use HasFactory;
+    protected $table = 'favoritos';
 
     public $timestamps = false;
     public $incrementing = false;
+    protected $primaryKey = null;
 
     protected $fillable = [
         'user_id', 'route_id'

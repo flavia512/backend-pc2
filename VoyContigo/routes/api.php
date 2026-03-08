@@ -13,41 +13,13 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-// Endpoint 1 - Info del usuario
-Route::get('/users/usuario', [UserController::class, 'show']);
-
-// Endpoint 5 - Rutas guardadas del usuario
-Route::get('/users/obtener_rutas', [RutaController::class, 'getRutasByUser']);
-
-// Endpoint 8 - Eliminar ruta
-Route::delete('/users/delete_rutas/{id}', [RutaController::class, 'destroy']);
+//Endpoints POST:
 
 // Endpoint 15 - Desactivar alerta por ruta
 Route::post('/users/desactivar_alerta', [AlertaController::class, 'desactivar']);
 
-// Endpoint 22 - Aumentar puntos al usuario
-Route::put('/user/aumentar_puntos_usuario', [UserController::class, 'aumentarPuntos']);
-
-// Endpoint 3: Listado de todas las rutas (GET)
-Route::get('/rutas', [RutaController::class, 'index']);
-
-// Endpoint 7: Actualizar rutas (PUT)
-Route::put('/users/update_rutas/{id}', [RutaController::class, 'update']);
-
-// Endpoint 11: Actualizar reservas por usuario (PUT)
-Route::put('/reservas/{id}', [ReservaController::class, 'update']);
-
 // Endpoint 12: Crear reserva por usuario (POST)
 Route::post('/users/crear_reserva', [ReservaController::class, 'crearReserva']);
-
-// Endpoint 13: Eliminar reserva por ID (DELETE)
-Route::delete('/users/eliminar_reserva/{id}', [ReservaController::class, 'eliminarReserva']);
-
-// Endpoint 18: Editar datos de usuarios (Admin) (PUT)
-Route::put('/admin/usuarios/{id}', [UserController::class, 'update']);
-
-// Endpoint 25: Eliminar de favoritos (DELETE)
-Route::delete('/favoritos/{id}', [FavoritoController::class, 'destroy']);
 
 // Endpoint 0: Crear usuario (POST)
 Route::post('/users', [UserController::class, 'store']);
@@ -55,17 +27,84 @@ Route::post('/users', [UserController::class, 'store']);
 //Endpoint 6 Postear las rutas (POST)
 Route::post('/users/crear_rutas', [RutaController::class, 'store']);
 
-// Endpoint 14: Todas las reservas de una ruta (GET)
-Route::get('/driver/reservas', [ReservaController::class, 'reservasPorRuta']);
+// Endpoint 24: Añadir a favoritos (POST)
+Route::post('/users/agregarFavorito', [FavoritoController::class, 'agregarFavorito']);
 
 // Endpoint 21: Crear viaje compartido (POST)
 Route::post('/driver/crear_viaje', [ViajeCompartidosController::class, 'crearViaje']);
 
-// Endpoint 19: Actualizar viaje compartido (PUT)
-Route::put('/driver/actualizar_viaje', [ViajeCompartidosController::class, 'actualizarViaje']);
+
+// Endpoint GET:
+
+// Endpoint 1 - Info del usuario (GET)
+Route::get('/users/usuario', [UserController::class, 'show']);
+
+// Endpoint 5 - Rutas guardadas del usuario
+Route::get('/users/obtener_rutas', [RutaController::class, 'getRutasByUser']);
+
+// Endpoint 3: Listado de todas las rutas (GET)
+Route::get('/rutas', [RutaController::class, 'index']);
+
+// Endpoint 14: Todas las reservas de una ruta (GET)
+Route::get('/driver/reservas', [ReservaController::class, 'reservasPorRuta']);
 
 // Endpoint 17: Obtener datos de viaje compartido (GET)
 Route::get('/users/obtener_viajecompartido', [ViajeCompartidosController::class, 'obtenerViaje']);
 
+// Endpoint 2: Lista de usuarios (GET)
+Route::get('/users/listaUsuarios', [UserController::class, 'listaUsuarios']);
+
+// Endpoint 9: Obtener predicciones por ruta (GET)
+Route::get('/users/obtener_predicciones', [RutaController::class, 'obtenerPredicciones']);
+
+// Endpoint 16: Obtener la alerta del usuario (GET)
+Route::get('/users/obtener_alerta', [AlertaController::class, 'obtenerAlertaUsuario']);
+
+// Endpoint 10: Obtener reservas por usuario (GET)
+Route::get('/users/obtener_reservas', [ReservaController::class, 'obtenerReservasPorUsuario']);
+
+
+
+//Endpoints PUT:
+
+// Endpoint 22 - Aumentar puntos al usuario
+Route::put('/user/aumentar_puntos_usuario', [UserController::class, 'aumentarPuntos']);
+
+// Endpoint 7: Actualizar rutas (PUT)
+Route::put('/users/update_rutas/{id}', [RutaController::class, 'update']);
+
+// Endpoint 11: Actualizar reservas por usuario (PUT)
+Route::put('/reservas/{id}', [ReservaController::class, 'update']);
+
+// Endpoint 18: Editar datos de usuarios (Admin) (PUT)
+Route::put('/admin/usuarios/{id}', [UserController::class, 'update']);
+
+// Endpoint 19: Actualizar viaje compartido (PUT)
+Route::put('/driver/actualizar_viaje', [ViajeCompartidosController::class, 'actualizarViaje']);
+
+// Endpoint 23: Quitar puntos al usuario (PUT)
+Route::put('/user/quitar_puntos_usuario', [UserController::class, 'quitarPuntoUsuarios']);
+
+
+// Endpoint DELETE:
+
+// Endpoint 8 - Eliminar ruta
+Route::delete('/users/delete_rutas/{id}', [RutaController::class, 'destroy']);
+
+// Endpoint 13: Eliminar reserva por ID (DELETE)
+Route::delete('/users/eliminar_reserva/{id}', [ReservaController::class, 'eliminarReserva']);
+
+// Endpoint 25: Eliminar de favoritos (DELETE)
+Route::delete('/favoritos', [FavoritoController::class, 'eliminarFavorito']);
+
 // Endpoint 20: Eliminar viaje compartido (DELETE)
 Route::delete('/driver/eliminar_viaje', [ViajeCompartidosController::class, 'eliminarViaje']);
+
+// Endpoint 4: Eliminar usuario (DELETE)
+Route::delete('/users/eliminar/{id}', [UserController::class, 'eliminarUsuario']);
+
+
+
+
+
+

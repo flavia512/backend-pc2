@@ -81,18 +81,18 @@ class ReservaController extends Controller
             'message' => 'Reserva eliminada correctamente'
         ], 200);
     }
-    // ENDPOINT 10 - GET /api/users/crearreservas?iduser=10
+    // ENDPOINT 10 - GET /api/users/crearreservas?user_id=10
     public function obtenerReservasPorUsuario(Request $request){
-        $iduser = $request->query('iduser');
+        $user_id = $request->query('user_id');
 
-        if (!$iduser) {
+        if (!$user_id) {
             return response()->json([
                 'ok' => false,
-                'mensaje' => 'El parámetro iduser es obligatorio'
+                'mensaje' => 'El parámetro user_id es obligatorio'
             ], 400);
         }
 
-        $reservas = \App\Models\Reserva::where('iduser', $iduser)->get();
+        $reservas = \App\Models\Reserva::where('user_id', $user_id)->get();
 
         return response()->json([
             'ok' => true,
