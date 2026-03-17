@@ -1,0 +1,140 @@
+php artisan make:model (Nombre) -mc
+
+
+php artisan make:migration create_personas_table
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+
+Crear la tabla
+
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('personas', function (Blueprint $table) {
+            $table->id(); // id autoincremental
+            $table->string('nombre');
+            $table->string('apellidos');
+            $table->string('matricula')->unique();
+            $table->string('modelo');
+            $table->timestamps(); // created_at y updated_at
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('personas');
+    }
+};
+
+php artisan migrate
+
+php artisan migrate --path=database/migrations/2026_03_17_123108_create_personas_table.php
+
+
+
+
+model persona
+
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Persona extends Model
+{
+    use HasFactory;
+
+    // Nombre de la tabla (opcional, Laravel lo infiere automáticamente)
+    protected $table = 'personas';
+
+    // Campos que se pueden asignar masivamente
+    protected $fillable = [
+        'nombre',
+        'apellidos',
+        'matricula',
+        'modelo',
+    ];
+}
+
+
+
+
+
+
+
+controller persona
+<?php
+
+namespace App\Http\Controllers;
+use Illuminate\Http\Request;
+use App\Models\Persona;
+class PersonaController extends Controller
+{
+
+    public function store(Request $request)
+    {
+        // Validar datos
+        $validated = $request->validate([
+            'nombre' => 'required|string|max:255',
+            'apellidos' => 'required|string|max:255',
+            'matricula' => 'required|string|unique:personas,matricula',
+            'modelo' => 'required|string|max:255',
+        ]);
+
+        // Crear registro
+        $persona = Persona::create($validated);
+
+        // Respuesta JSON
+        return response()->json([
+            'message' => 'Persona creada correctamente',
+            'data' => $persona
+        ], 201);
+    }
+}
+
+
+Route::post('/personas', [PersonaController::class, 'store']);
+
+
+POST http://tu-dominio.test/api/personas
+Content-Type: application/json
+
+body raw
+
+{
+    "nombre": "Juan",
+    "apellidos": "Pérez",
+    "matricula": "12345",
+    "modelo": "Toyota"
+}
+
+
+// Crear persona
+Route::post('/personas', [PersonaController::class, 'store']);
+
+// Obtener todas las personas
+Route::get('/personas', [PersonaController::class, 'index']);
+
+// Obtener una persona por id
+Route::get('/personas/{id}', [PersonaController::class, 'show']);
+
+// Actualizar persona
+Route::put('/personas/{id}', [PersonaController::class, 'update']);
+
+// Eliminar persona
+Route::delete('/personas/{id}', [PersonaController::class, 'destroy']);
+
+para el put
+{
+    "nombre": "Carlos",
+    "modelo": "Honda"
+}
+
+delete y get se pone el id despues de la barra, ejemplo http://tu-dominio.test/api/personas/1

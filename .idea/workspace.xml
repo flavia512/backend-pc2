@@ -3,9 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="e9a1c5fd-e3fa-4373-b23d-fcfd60a22ef4" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/VoyContigo/app/Http/Controllers/FavoritoController.php" beforeDir="false" afterPath="$PROJECT_DIR$/VoyContigo/app/Http/Controllers/FavoritoController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/VoyContigo/app/Http/Controllers/ReservaController.php" beforeDir="false" afterPath="$PROJECT_DIR$/VoyContigo/app/Http/Controllers/ReservaController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/VoyContigo/app/Models/Favorito.php" beforeDir="false" afterPath="$PROJECT_DIR$/VoyContigo/app/Models/Favorito.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/VoyContigo/database/migrations/0001_01_01_000001_create_cache_table.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/VoyContigo/database/migrations/0001_01_01_000002_create_jobs_table.php" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/VoyContigo/routes/api.php" beforeDir="false" afterPath="$PROJECT_DIR$/VoyContigo/routes/api.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -23,6 +22,13 @@
     <persistenceIdMap>
       <entry key="_C:/Users/izand/Documents/GitHub/backend-pc2" value="3ATpjw97FYNS14dSbtowf4eD83B" />
     </persistenceIdMap>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="PHP File" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -199,7 +205,12 @@
       <workItem from="1772809414621" duration="8511000" />
       <workItem from="1772904885058" duration="12000" />
       <workItem from="1772910627748" duration="5011000" />
-      <workItem from="1772968096931" duration="9791000" />
+      <workItem from="1772968096931" duration="12852000" />
+      <workItem from="1773076809458" duration="17000" />
+      <workItem from="1773315531202" duration="320000" />
+      <workItem from="1773318906156" duration="2193000" />
+      <workItem from="1773663962491" duration="159000" />
+      <workItem from="1773749466943" duration="3225000" />
     </task>
     <servers />
   </component>
