@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e9a1c5fd-e3fa-4373-b23d-fcfd60a22ef4" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/VoyContigo/database/migrations/0001_01_01_000001_create_cache_table.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/VoyContigo/database/migrations/0001_01_01_000002_create_jobs_table.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/VoyContigo/routes/api.php" beforeDir="false" afterPath="$PROJECT_DIR$/VoyContigo/routes/api.php" afterDir="false" />
-    </list>
+    <list default="true" id="e9a1c5fd-e3fa-4373-b23d-fcfd60a22ef4" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -210,7 +205,7 @@
       <workItem from="1773315531202" duration="320000" />
       <workItem from="1773318906156" duration="2193000" />
       <workItem from="1773663962491" duration="159000" />
-      <workItem from="1773749466943" duration="3225000" />
+      <workItem from="1773749466943" duration="3809000" />
     </task>
     <servers />
   </component>
