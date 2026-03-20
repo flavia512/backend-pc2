@@ -36,6 +36,7 @@ class FavoritoController extends Controller
             'message' => 'Favorito eliminado correctamente'
         ], 200);
     }
+    
     public function agregarFavorito(Request $request)
     {
         $request->validate([
