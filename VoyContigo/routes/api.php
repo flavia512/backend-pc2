@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RutaController;
 use App\Http\Controllers\AlertaController;
@@ -9,9 +10,18 @@ use App\Http\Controllers\FavoritoController;
 use App\Http\Controllers\ReservaController;
 use App\Http\Controllers\ViajeCompartidosController;
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+// ─── Rutas públicas (Auth) ───────────────────────────────────
+Route::prefix('auth')->group(function () {
+    Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/login',    [AuthController::class, 'login']);
+});
+
+// ─── Rutas protegidas (Auth) ─────────────────────────────────
+Route::middleware('auth:api')->prefix('auth')->group(function () {
+    Route::post('/logout',  [AuthController::class, 'logout']);
+    Route::post('/refresh', [AuthController::class, 'refresh']);
+    Route::get('/me',       [AuthController::class, 'me']);
+});
 
 //Endpoints POST:
 
