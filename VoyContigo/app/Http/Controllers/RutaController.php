@@ -10,8 +10,7 @@ class RutaController extends Controller
 {
     // ENDPOINT 5 - GET /api/users/obtener_rutas?user_id=10
     public function getRutasByUser(Request $request) {
-        $rutas = Ruta::where('user_id', $request->query('user_id'))->get();
-
+        $rutas = Ruta::where('user_id', auth()->id())->get();
         if ($rutas->isEmpty()) {
             return response()->json(['message' => 'No se encontraron rutas'], 404);
         }
@@ -21,7 +20,7 @@ class RutaController extends Controller
 
     // ENDPOINT 8 - DELETE /api/users/delete_rutas/{id}
     public function destroy($id) {
-        $ruta = Ruta::find($id);
+        $ruta = Ruta::where('id', $id)->where('user_id', auth()->id())->first();
 
         if (!$ruta) {
             return response()->json(['message' => 'Ruta no encontrada'], 404);
@@ -46,7 +45,8 @@ class RutaController extends Controller
 
     // ENDPOINT 7: Actualizar rutas
     public function update(Request $request, $id) {
-        $ruta = Ruta::find($id); if (!$ruta) {
+        $ruta = Ruta::where('id', $id)->where('user_id', auth()->id())->first();
+        if (!$ruta) {
             return response()->json(['success' => false, 'message' => 'Ruta no encontrada'], 404);
         } // Actualizamos con los datos que vengan en el body de la petición
         $ruta->update($request->all());
@@ -77,9 +77,7 @@ class RutaController extends Controller
     // Endpoint 6: Crear rutas
     public function store(Request $request)
     {
-        // Validación de los campos requeridos
         $request->validate([
-            'user_id'     => 'required|exists:users,id',
             'origin_text' => 'required|string|max:255',
             'origin_lat'  => 'required|numeric',
             'origin_lng'  => 'required|numeric',
@@ -90,18 +88,14 @@ class RutaController extends Controller
             'duration_min'=> 'nullable|integer|min:0',
         ]);
 
-        // Verificar que el usuario existe
-        $user = User::findOrFail($request->user_id);
-
-        // Crear la ruta
         $ruta = Ruta::create([
-            'user_id'      => $request->user_id,
+            'user_id'      => auth()->id(),
             'origin_text'  => $request->origin_text,
             'origin_lat'   => $request->origin_lat,
             'origin_lng'   => $request->origin_lng,
             'dest_text'    => $request->dest_text,
-            'dest_lat'     => $request->dest_lat,
-            'dest_lng'     => $request->dest_lng,
+            'dest_lat'    => $request->dest_lat,
+            'dest_lng'    => $request->dest_lng,
             'arrival_time' => $request->arrival_time ?? null,
             'duration_min' => $request->duration_min ?? null,
         ]);

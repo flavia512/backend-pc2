@@ -8,32 +8,22 @@ use Illuminate\Http\Request;
 class UserController extends Controller
 {
     // ENDPOINT 1 - GET /api/users/usuario?user_id=10
-    public function show(Request $request) {
-        $user = User::find($request->query('user_id'));
-
+    public function show() {
+        $user = auth()->user();
         if (!$user) {
-            return response()->json(['message' => 'Usuario no encontrado'], 404);
+            return response()->json(['message' => 'Usuario no autenticado'], 401);
         }
-
         return response()->json($user, 200);
     }
 
     // ENDPOINT 22 - PUT /api/user/aumentar_puntos_usuario?cantidad=20
     public function aumentarPuntos(Request $request) {
         $request->validate([
-            'user_id'   => 'required|integer',
             'cantidad' => 'required|integer|min:1',
         ]);
-
-        $user = User::find($request->query('user_id'));
-
-        if (!$user) {
-            return response()->json(['message' => 'Usuario no encontrado'], 404);
-        }
-
-        $user->puntos += $request->query('cantidad');
+        $user = auth()->user();
+        $user->puntos += $request->cantidad;
         $user->save();
-
         return response()->json([
             'message' => 'Puntos actualizados correctamente',
             'puntos_totales' => $user->puntos
@@ -46,10 +36,23 @@ class UserController extends Controller
         $usuario = User::find($id);
 
         if (!$usuario) {
-            return response()->json(['success' => false, 'message' => 'Usuario no encontrado'], 404);
+            return response()->json([
+                'success' => false,
+                'message' => 'Usuario no encontrado'
+            ], 404);
         }
 
-        $usuario->update($request->all());
+        $request->validate([
+            'full_name' => 'sometimes|string|max:255',
+            'email'     => 'sometimes|email|unique:users,email,' . $id,
+            'is_active' => 'sometimes|boolean',
+        ]);
+
+        $usuario->update($request->only([
+            'full_name',
+            'email',
+            'is_active'
+        ]));
 
         return response()->json([
             'success' => true,
@@ -88,28 +91,12 @@ class UserController extends Controller
     }
     // ENDPOINT 23 - PUT /api/user/quitar_punto_usuarios?user_id=10&cantidad=20
     public function quitarPuntoUsuarios(Request $request){
-        $user_id = $request->query('user_id');
-        $cantidad = $request->query('cantidad');
-
-        if (!$user_id || !$cantidad) {
-            return response()->json([
-                'ok' => false,
-                'mensaje' => 'Los parámetros user_id y cantidad son obligatorios'
-            ], 400);
-        }
-
-        $usuario = \App\Models\User::find($user_id);
-
-        if (!$usuario) {
-            return response()->json([
-                'ok' => false,
-                'mensaje' => 'Usuario no encontrado'
-            ], 404);
-        }
-
-        $usuario->puntos = max(0, $usuario->puntos - $cantidad);
+        $request->validate([
+            'cantidad' => 'required|integer|min:1',
+        ]);
+        $usuario = auth()->user();
+        $usuario->puntos = max(0, $usuario->puntos - $request->cantidad);
         $usuario->save();
-
         return response()->json([
             'ok' => true,
             'mensaje' => 'Puntos descontados correctamente',

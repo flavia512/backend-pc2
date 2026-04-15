@@ -10,6 +10,12 @@ use App\Http\Controllers\FavoritoController;
 use App\Http\Controllers\ReservaController;
 use App\Http\Controllers\ViajeCompartidosController;
 
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/users/update', [UserController::class, 'update']);
+    Route::post('/rutas', [RutaController::class, 'store']);
+});
+
 // ─── Rutas públicas (Auth) ───────────────────────────────────
 Route::prefix('auth')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
