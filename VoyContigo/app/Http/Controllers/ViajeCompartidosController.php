@@ -7,6 +7,17 @@ use Illuminate\Http\Request;
 
 class ViajeCompartidosController extends Controller
 {
+    protected function normalizarPayload(Request $request): array
+    {
+        $data = $request->all();
+
+        if (empty($data['origin']) && !empty($data['station_name'])) {
+            $data['origin'] = $data['station_name'];
+        }
+
+        return $data;
+    }
+
     // ENDPOINT 20: Actualizar datos de viaje compartido
     // PUT api/driver/actualizar_viaje.php?idviaje=10
     public function actualizarViaje(Request $request)
@@ -21,7 +32,28 @@ class ViajeCompartidosController extends Controller
             ], 404);
         }
 
-        $viaje->update($request->all());
+        $data = $this->normalizarPayload($request);
+
+        $validator = \Validator::make($data, [
+            'driver_user_id' => 'sometimes|exists:users,id',
+            'route_id' => 'sometimes|exists:rutas,id',
+            'origin' => 'sometimes|string',
+            'destiny' => 'nullable|string',
+            'trip_datetime' => 'sometimes|date',
+            'seats_total' => 'sometimes|integer|min:1',
+            'seats_available' => 'sometimes|integer|min:0',
+            'status' => 'nullable|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Datos inválidos',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $viaje->update($validator->validated());
 
         return response()->json([
             'success' => true,
@@ -34,10 +66,13 @@ class ViajeCompartidosController extends Controller
     // POST api/driver/crear_viaje.php
     public function crearViaje(Request $request)
     {
-        $validator = \Validator::make($request->all(), [
+        $data = $this->normalizarPayload($request);
+
+        $validator = \Validator::make($data, [
             'driver_user_id' => 'required|exists:users,id',
             'route_id' => 'required|exists:rutas,id',
-            'station_name' => 'nullable|string',
+            'origin' => 'required|string',
+            'destiny' => 'nullable|string',
             'trip_datetime' => 'required|date',
             'seats_total' => 'required|integer|min:1',
             'seats_available' => 'required|integer|min:0',
@@ -52,7 +87,7 @@ class ViajeCompartidosController extends Controller
             ], 422);
         }
 
-        $viaje = ViajeCompartidos::create($request->all());
+        $viaje = ViajeCompartidos::create($validator->validated());
 
         return response()->json([
             'success' => true,

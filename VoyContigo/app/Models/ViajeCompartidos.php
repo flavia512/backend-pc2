@@ -12,7 +12,7 @@ class ViajeCompartidos extends Model
     protected $table = 'viaje_compartidos';
 
     protected $fillable = [
-        'driver_user_id', 'route_id', 'station_name',
+        'driver_user_id', 'route_id', 'origin', 'destiny',
         'trip_datetime', 'seats_total', 'seats_available', 'status'
     ];
 
