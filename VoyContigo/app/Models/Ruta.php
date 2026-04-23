@@ -10,8 +10,9 @@ class Ruta extends Model {
 use HasFactory;
     protected $table = 'rutas';
     protected $fillable = [
-        'user_id', 'origin_text', 'origin_lat', 'origin_lng',
-        'dest_text', 'dest_lat', 'dest_lng', 'arrival_time', 'duration_min'
+        'user_id', 'nombre', 'origin_text', 'origin_lat', 'origin_lng',
+        'dest_text', 'dest_lat', 'dest_lng', 'arrival_time', 'duration_min',
+        'hora_salida', 'pasa_por_m30'
     ];
 
     // Relación (N:1) - Una ruta pertenece a un usuario

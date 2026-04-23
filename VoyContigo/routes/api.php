@@ -13,7 +13,6 @@ use App\Http\Controllers\ViajeCompartidosController;
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/users/update', [UserController::class, 'update']);
-    Route::post('/rutas', [RutaController::class, 'store']);
 });
 
 // ─── Rutas públicas (Auth) ───────────────────────────────────
@@ -57,6 +56,9 @@ Route::get('/users/usuario', [UserController::class, 'show']);
 
 // Endpoint 5 - Rutas guardadas del usuario
 Route::get('/users/obtener_rutas', [RutaController::class, 'getRutasByUser']);
+
+// Endpoint 8 - Eliminar ruta del usuario
+Route::delete('/users/delete_rutas/{id}', [RutaController::class, 'destroy']);
 
 // Endpoint 3: Listado de todas las rutas (GET)
 Route::get('/rutas', [RutaController::class, 'index']);

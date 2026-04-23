@@ -18,6 +18,8 @@ return new class extends Migration
             ->constrained('users')
             ->cascadeOnDelete();
 
+        $table->string('nombre', 255)->nullable();
+
         $table->string('origin_text');
         $table->decimal('origin_lat', 10, 7);
         $table->decimal('origin_lng', 10, 7);
@@ -28,6 +30,8 @@ return new class extends Migration
 
         $table->time('arrival_time')->nullable();
         $table->unsignedInteger('duration_min')->nullable();
+        $table->time('hora_salida')->nullable();
+        $table->boolean('pasa_por_m30')->default(false);
 
         $table->timestamps();
         });
