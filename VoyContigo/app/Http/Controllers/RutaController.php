@@ -11,10 +11,6 @@ class RutaController extends Controller
     // ENDPOINT 5 - GET /api/users/obtener_rutas?user_id=10
     public function getRutasByUser(Request $request) {
         $rutas = Ruta::where('user_id', auth()->id())->get();
-        if ($rutas->isEmpty()) {
-            return response()->json(['message' => 'No se encontraron rutas'], 404);
-        }
-
         return response()->json($rutas, 200);
     }
 
