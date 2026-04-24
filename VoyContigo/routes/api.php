@@ -15,11 +15,24 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/users/update', [UserController::class, 'update']);
 });
 
+// ─── Rutas protegidas con JWT (auth:api) ─────────────────────
+Route::middleware('auth:api')->group(function () {
+    // Rutas del usuario
+    Route::get('/users/obtener_rutas', [RutaController::class, 'getRutasByUser']);
+    Route::post('/users/crear_rutas', [RutaController::class, 'store']);
+    Route::delete('/users/delete_rutas/{id}', [RutaController::class, 'destroy']);
+});
+
 // ─── Rutas públicas (Auth) ───────────────────────────────────
 Route::prefix('auth')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login',    [AuthController::class, 'login']);
 });
+
+// Aliases sin prefijo /auth (usados por el frontend)
+Route::post('/login',    [AuthController::class, 'login']);
+Route::post('/register', [AuthController::class, 'register']);
+Route::get('/profile',   [AuthController::class, 'me'])->middleware('auth:api');
 
 // ─── Rutas protegidas (Auth) ─────────────────────────────────
 Route::middleware('auth:api')->prefix('auth')->group(function () {
@@ -39,9 +52,6 @@ Route::post('/users/crear_reserva', [ReservaController::class, 'crearReserva']);
 // Endpoint 0: Crear usuario (POST)
 Route::post('/users', [UserController::class, 'store']);
 
-//Endpoint 6 Postear las rutas (POST)
-Route::post('/users/crear_rutas', [RutaController::class, 'store']);
-
 // Endpoint 24: Añadir a favoritos (POST)
 Route::post('/users/agregarFavorito', [FavoritoController::class, 'agregarFavorito']);
 
@@ -53,12 +63,6 @@ Route::post('/driver/crear_viaje', [ViajeCompartidosController::class, 'crearVia
 
 // Endpoint 1 - Info del usuario (GET)
 Route::get('/users/usuario', [UserController::class, 'show']);
-
-// Endpoint 5 - Rutas guardadas del usuario
-Route::get('/users/obtener_rutas', [RutaController::class, 'getRutasByUser']);
-
-// Endpoint 8 - Eliminar ruta del usuario
-Route::delete('/users/delete_rutas/{id}', [RutaController::class, 'destroy']);
 
 // Endpoint 3: Listado de todas las rutas (GET)
 Route::get('/rutas', [RutaController::class, 'index']);

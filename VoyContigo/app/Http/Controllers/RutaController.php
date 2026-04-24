@@ -81,9 +81,9 @@ class RutaController extends Controller
             'dest_text'    => 'required|string|max:255',
             'dest_lat'     => 'required|numeric',
             'dest_lng'     => 'required|numeric',
-            'arrival_time' => 'nullable|date_format:H:i:s',
+            'arrival_time' => 'nullable|date_format:H:i',
             'duration_min' => 'nullable|integer|min:0',
-            'hora_salida'  => 'nullable|date_format:H:i:s',
+            'hora_salida'  => 'nullable|date_format:H:i',
             'pasa_por_m30' => 'nullable|boolean',
         ]);
 
