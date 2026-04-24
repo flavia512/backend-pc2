@@ -110,9 +110,6 @@ Route::put('/user/quitar_puntos_usuario', [UserController::class, 'quitarPuntoUs
 
 // Endpoint DELETE:
 
-// Endpoint 8 - Eliminar ruta
-Route::delete('/users/delete_rutas/{id}', [RutaController::class, 'destroy']);
-
 // Endpoint 13: Eliminar reserva por ID (DELETE)
 Route::delete('/users/eliminar_reserva/{id}', [ReservaController::class, 'eliminarReserva']);
 
