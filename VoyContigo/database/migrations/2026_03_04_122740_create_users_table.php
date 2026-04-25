@@ -15,7 +15,9 @@ return new class extends Migration
             $table->integer('puntos')->default(0);
             $table->timestamp('last_login_at')->nullable();
             $table->boolean('is_active')->default(true);
+            $table->string('rol')->default('user');
             $table->timestamps();
+
         });
     }
 

@@ -20,7 +20,7 @@ class ViajeCompartidos extends Model
         'trip_datetime' => 'datetime'
     ];
 
-    // Relación: El viaje le pertenece a un conductor (Usuario)
+    // Relación: El viaje le pertenece a un conductor (Usuario) 
     public function conductor() {
         return $this->belongsTo(User::class, 'driver_user_id');
     }

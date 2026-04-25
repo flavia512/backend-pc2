@@ -114,6 +114,7 @@ class UserController extends Controller
             'password'  => 'required|string|min:6',
             'is_active' => 'sometimes|boolean',
             'puntos'    => 'sometimes|integer|min:0',
+            'rol'       => 'sometimes|string|in:admin,user',
         ]);
 
         // Crear el usuario en la base de datos
@@ -123,6 +124,7 @@ class UserController extends Controller
             'password_hash' => bcrypt($request->password), // almacenar contraseña hasheada
             'puntos'        => $request->puntos ?? 0,
             'is_active'     => $request->is_active ?? true,
+            'rol'           => $request->rol ?? 'user',
             'last_login_at' => null,
         ]);
 
