@@ -32,16 +32,15 @@ class ReservaController extends Controller
     // POST api/users/crear_reserva.php?user_id=10
     public function crearReserva(Request $request)
     {
-        $userId = $request->query('user_id');
         $data = $request->all();
-        $data['user_id'] = $userId;
+
+        // status por defecto
         $data['status'] = $data['status'] ?? 'pending';
-        // Validar campos requeridos
+
         $validator = \Validator::make($data, [
             'user_id' => 'required|exists:users,id',
             'trip_id' => 'required|exists:viaje_compartidos,id',
             'seats' => 'required|integer|min:1',
-            //'status' => 'nullable|string',
         ]);
 
         if ($validator->fails()) {
@@ -99,6 +98,7 @@ class ReservaController extends Controller
             'reservas' => $reservas
         ], 200);
     }
+
     // Endpoint 14: Obtener todas las reservas de una ruta
     public function reservasPorRuta(Request $request)
     {

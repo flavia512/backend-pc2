@@ -117,9 +117,9 @@ class ViajeCompartidosController extends Controller
 
     // ENDPOINT 20: Eliminar viaje compartido
     // DELETE api/driver/eliminar_viaje?idviaje=10
-    public function eliminarViaje(Request $request)
+    public function eliminarViaje($idviaje)
     {
-        $viaje = ViajeCompartidos::find($request->query('idviaje'));
+        $viaje = ViajeCompartidos::find($idviaje);
 
         if (!$viaje) {
             return response()->json([
@@ -133,6 +133,15 @@ class ViajeCompartidosController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Viaje compartido eliminado correctamente'
+        ], 200);
+    }
+    public function listarViajes()
+    {
+        $viajes = ViajeCompartidos::with('conductor', 'ruta', 'reservas')->get();
+
+        return response()->json([
+            'success' => true,
+            'data' => $viajes
         ], 200);
     }
 }

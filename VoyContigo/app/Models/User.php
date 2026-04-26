@@ -16,7 +16,7 @@ protected $fillable = [
     ];
 
     protected $hidden = [
-        'password_hash',
+        'password',
     ];
 
     protected $casts = [
@@ -59,7 +59,7 @@ protected $fillable = [
     {
         return [];
     }
-    
+
 }
 
 

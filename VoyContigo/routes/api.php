@@ -85,7 +85,8 @@ Route::get('/users/obtener_alerta', [AlertaController::class, 'obtenerAlertaUsua
 // Endpoint 10: Obtener reservas por usuario (GET)
 Route::get('/users/obtener_reservas', [ReservaController::class, 'obtenerReservasPorUsuario']);
 
-
+//Endpoint listarViajes
+Route::get('/users/viajes_compartidos', [ViajeCompartidosController::class, 'listarViajes']);
 
 //Endpoints PUT:
 
@@ -117,7 +118,7 @@ Route::delete('/users/eliminar_reserva/{id}', [ReservaController::class, 'elimin
 Route::delete('/favoritos', [FavoritoController::class, 'eliminarFavorito']);
 
 // Endpoint 20: Eliminar viaje compartido (DELETE)
-Route::delete('/driver/eliminar_viaje', [ViajeCompartidosController::class, 'eliminarViaje']);
+Route::delete('/driver/eliminar_viaje/{idviaje}', [ViajeCompartidosController::class, 'eliminarViaje']);
 
 // Endpoint 4: Eliminar usuario (DELETE)
 Route::delete('/users/eliminar/{id}', [UserController::class, 'eliminarUsuario']);
