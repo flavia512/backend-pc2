@@ -66,35 +66,47 @@ class ViajeCompartidosController extends Controller
     // POST api/driver/crear_viaje.php
     public function crearViaje(Request $request)
     {
-        $data = $this->normalizarPayload($request);
+        $data = $request->all();
 
         $validator = \Validator::make($data, [
-            'driver_user_id' => 'required|exists:users,id',
-            'route_id' => 'required|exists:rutas,id',
-            'origin' => 'required|string',
-            'destiny' => 'nullable|string',
+            'route_id' => 'required|exists:rutas,id', 
             'trip_datetime' => 'required|date',
             'seats_total' => 'required|integer|min:1',
             'seats_available' => 'required|integer|min:0',
-            'status' => 'nullable|string',
         ]);
 
         if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Datos inválidos',
-                'errors' => $validator->errors()
-            ], 422);
+            return response()->json(['success' => false, 'errors' => $validator->errors()], 422);
         }
 
-        $viaje = ViajeCompartidos::create($validator->validated());
+        $validatedData = $validator->validated();
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Viaje compartido creado correctamente',
-            'data' => $viaje
-        ], 201);
+
+        // Intentamos sacar el ID usando el guardia 'api' (típico en JWT) o el por defecto
+        $userId = auth('api')->id() ?? auth()->id();
+
+        // Si sigue siendo nulo, frenamos la petición ANTES de tocar la base de datos
+        if (!$userId) {
+            return response()->json([
+                'success' => false, 
+                'message' => 'No autorizado. Laravel no puede leer tu token JWT.'
+            ], 401);
+        }
+
+        $validatedData['driver_user_id'] = $userId;
+        $validatedData['status'] = 'activo';
+
+        // Copiamos los textos de la ruta al viaje
+        $rutaElegida = \App\Models\Ruta::find($validatedData['route_id']);
+        $validatedData['origin'] = $rutaElegida->origin_text;
+        $validatedData['destiny'] = $rutaElegida->dest_text;
+
+        // Guardamos el viaje
+        $viaje = ViajeCompartidos::create($validatedData);
+
+        return response()->json(['success' => true, 'data' => $viaje], 201);
     }
+
 
     // ENDPOINT: ENDPOINT 17:  Obtener datos de viaje compartido
     // GET api/users/obtener_viajecompartido?idviaje=10
