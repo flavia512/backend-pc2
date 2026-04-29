@@ -11,10 +11,6 @@ use App\Http\Controllers\ReservaController;
 use App\Http\Controllers\ViajeCompartidosController;
 
 
-Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/users/update', [UserController::class, 'update']);
-});
-
 // ─── Rutas protegidas con JWT (auth:api) ─────────────────────
 Route::middleware('auth:api')->group(function () {
     // Rutas del usuario
@@ -42,6 +38,9 @@ Route::middleware('auth:api')->prefix('auth')->group(function () {
 });
 
 //Endpoints POST:
+Route::middleware('auth:api')->group(function () {
+    // Endpoint 5: Crear alerta por ruta (POST)
+    Route::post('/users/crear_alerta', [AlertaController::class, 'crearAlerta']);
 
 // Endpoint 15 - Desactivar alerta por ruta
 Route::post('/users/desactivar_alerta', [AlertaController::class, 'desactivar']);
@@ -107,7 +106,7 @@ Route::put('/driver/actualizar_viaje', [ViajeCompartidosController::class, 'actu
 
 // Endpoint 23: Quitar puntos al usuario (PUT)
 Route::put('/user/quitar_puntos_usuario', [UserController::class, 'quitarPuntoUsuarios']);
-
+ Route::post('/users/update', [UserController::class, 'update']);
 
 // Endpoint DELETE:
 
@@ -123,7 +122,7 @@ Route::delete('/driver/eliminar_viaje/{idviaje}', [ViajeCompartidosController::c
 // Endpoint 4: Eliminar usuario (DELETE)
 Route::delete('/users/eliminar/{id}', [UserController::class, 'eliminarUsuario']);
 
-
+});
 
 
 
