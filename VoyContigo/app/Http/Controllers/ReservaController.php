@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\Ruta;
 
 use App\Models\Reserva;
+use App\Models\ViajeCompartidos;
 use Illuminate\Http\Request;
 
 class ReservaController extends Controller
@@ -51,7 +52,18 @@ class ReservaController extends Controller
             ], 422);
         }
 
+        $viaje = ViajeCompartidos::find($data['trip_id']);
+
+        if ($viaje->seats_available < $data['seats']) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No hay suficientes asientos disponibles'
+            ], 422);
+        }
+
         $reserva = Reserva::create($data);
+
+        $viaje->decrement('seats_available', $data['seats']);
 
         return response()->json([
             'success' => true,
@@ -73,11 +85,17 @@ class ReservaController extends Controller
             ], 404);
         }
 
+        $viaje = ViajeCompartidos::find($reserva->trip_id);
+
         $reserva->delete();
+
+        if ($viaje) {
+            $viaje->increment('seats_available', $reserva->seats);
+        }
 
         return response()->json([
             'success' => true,
-            'message' => 'Reserva eliminada correctamente'
+            'message' => 'Reserva cancelada correctamente'
         ], 200);
     }
     // ENDPOINT 10 - GET /api/users/crearreservas?user_id=10
