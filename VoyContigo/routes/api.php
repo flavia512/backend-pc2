@@ -85,7 +85,10 @@ Route::get('/users/obtener_alerta', [AlertaController::class, 'obtenerAlertaUsua
 Route::get('/users/obtener_reservas', [ReservaController::class, 'obtenerReservasPorUsuario']);
 
 //Endpoint listarViajes
-Route::get('/users/viajes_compartidos', [ViajeCompartidosController::class, 'listarViajes']);
+Route::get('/user/listar_viajes', [ViajeCompartidosController::class, 'listar']);
+
+// Endpoint buscarViajes con filtros (origin, destiny, fecha)
+Route::get('/user/buscar_viajes', [ViajeCompartidosController::class, 'buscarViajes']);
 
 //Endpoints PUT:
 

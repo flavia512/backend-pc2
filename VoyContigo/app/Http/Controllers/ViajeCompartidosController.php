@@ -147,13 +147,37 @@ class ViajeCompartidosController extends Controller
             'message' => 'Viaje compartido eliminado correctamente'
         ], 200);
     }
-    public function listarViajes()
+    
+    public function listar(Request $request)
     {
-        $viajes = ViajeCompartidos::with('conductor', 'ruta', 'reservas')->get();
+        $viajes = ViajeCompartidos::with('conductor', 'ruta', 'reservas')
+            ->orderBy('trip_datetime', 'desc')
+            ->get();
+
+        return response()->json(['success' => true, 'data' => $viajes]);
+    }
+
+    // ENDPOINT: Buscar viajes compartidos con filtros
+    // GET api/driver/buscar_viajes?origin=X&destiny=Y&fecha=2026-05-02
+    public function buscarViajes(Request $request)
+    {
+        $query = ViajeCompartidos::with('conductor', 'ruta', 'reservas');
+
+        if ($request->filled('origin')) {
+            $query->where('origin', 'like', '%' . $request->origin . '%');
+        }
+
+        if ($request->filled('destiny')) {
+            $query->where('destiny', 'like', '%' . $request->destiny . '%');
+        }
+
+        if ($request->filled('fecha')) {
+            $query->whereDate('trip_datetime', $request->fecha);
+        }
 
         return response()->json([
             'success' => true,
-            'data' => $viajes
+            'data'    => $query->orderBy('trip_datetime', 'desc')->get()
         ], 200);
     }
 }
