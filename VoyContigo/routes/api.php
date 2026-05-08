@@ -81,6 +81,9 @@ Route::get('/users/obtener_predicciones', [RutaController::class, 'obtenerPredic
 // Endpoint 16: Obtener la alerta del usuario (GET)
 Route::get('/users/obtener_alerta', [AlertaController::class, 'obtenerAlertaUsuario']);
 
+// Endpoint 26: Listar favoritos del usuario autenticado (GET)
+Route::get('/users/listar_favoritos', [FavoritoController::class, 'listarFavoritos']);
+
 // Endpoint 10: Obtener reservas por usuario (GET)
 Route::get('/users/obtener_reservas', [ReservaController::class, 'obtenerReservasPorUsuario']);
 
