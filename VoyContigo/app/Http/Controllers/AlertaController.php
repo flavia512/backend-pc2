@@ -57,7 +57,7 @@ class AlertaController extends Controller
             ], 400);
         }
 
-        $alertas = \App\Models\Alerta::where('user_id', $user_id)->get();
+        $alertas = \App\Models\Alerta::with('ruta')->where('user_id', $user_id)->get();
 
         return response()->json([
             'ok' => true,
