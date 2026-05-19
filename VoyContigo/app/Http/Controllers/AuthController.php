@@ -7,7 +7,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
+<<<<<<< HEAD
 
+=======
+>>>>>>> 45ae2367aea7adb36febd113736ca23f96cd0691
 class AuthController extends Controller
 {
     /**

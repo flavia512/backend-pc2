@@ -68,4 +68,18 @@ class FavoritoController extends Controller
             'data' => $favorito
         ], 201);
     }
+
+    // Endpoint 26: Listar favoritos del usuario autenticado
+    // GET /api/users/listar_favoritos
+    public function listarFavoritos(Request $request)
+    {
+        $favoritos = Favorito::with('ruta')
+            ->where('user_id', auth()->id())
+            ->get();
+
+        return response()->json([
+            'ok'        => true,
+            'favoritos' => $favoritos,
+        ], 200);
+    }
 }
