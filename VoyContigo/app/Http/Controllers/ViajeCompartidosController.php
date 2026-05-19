@@ -137,7 +137,7 @@ class ViajeCompartidosController extends Controller
     }
     public function listarViajes()
     {
-        $viajes = ViajeCompartidos::with('conductor', 'ruta', 'reservas')->get();
+        $viajes = ViajeCompartidos::with('conductor', 'ruta', 'reservas.usuario')->get();
 
         return response()->json([
             'success' => true,

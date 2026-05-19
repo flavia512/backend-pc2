@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 use App\Models\Ruta;
+use App\Models\ViajeCompartidos;
+
 
 use App\Models\Reserva;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ReservaController extends Controller
 {
@@ -32,18 +35,24 @@ class ReservaController extends Controller
     // POST api/users/crear_reserva.php?user_id=10
     public function crearReserva(Request $request)
     {
-        $data = $request->all();
+        // Verificar si el usuario ha iniciado sesión
+        if (!$request->user()) {
 
-        // status por defecto
-        $data['status'] = $data['status'] ?? 'pending';
+            return response()->json([
+                'success' => false,
+                'message' => 'Para reservar un viaje tienes que iniciar sesión'
+            ], 401);
+        }
 
-        $validator = \Validator::make($data, [
-            'user_id' => 'required|exists:users,id',
+        $validator = \Validator::make($request->all(), [
+
             'trip_id' => 'required|exists:viaje_compartidos,id',
+
             'seats' => 'required|integer|min:1',
         ]);
 
         if ($validator->fails()) {
+
             return response()->json([
                 'success' => false,
                 'message' => 'Datos inválidos',
@@ -51,12 +60,59 @@ class ReservaController extends Controller
             ], 422);
         }
 
-        $reserva = Reserva::create($data);
+        $user = $request->user();
+        $validated = $validator->validated();
+
+        $reserva = DB::transaction(function () use ($validated, $user) {
+            $viaje = ViajeCompartidos::where('id', $validated['trip_id'])
+                ->lockForUpdate()
+                ->firstOrFail();
+
+            if ($viaje->driver_user_id === $user->id) {
+                abort(response()->json([
+                    'success' => false,
+                    'message' => 'No puedes reservar tu propio viaje'
+                ], 422));
+            }
+
+            $reservaExistente = Reserva::where('user_id', $user->id)
+                ->where('trip_id', $viaje->id)
+                ->exists();
+
+            if ($reservaExistente) {
+                abort(response()->json([
+                    'success' => false,
+                    'message' => 'Ya tienes una reserva para este viaje'
+                ], 422));
+            }
+
+            if ($viaje->seats_available < $validated['seats']) {
+                abort(response()->json([
+                    'success' => false,
+                    'message' => 'No quedan suficientes asientos disponibles'
+                ], 422));
+            }
+
+            $reserva = Reserva::create([
+                'user_id' => $user->id,
+                'trip_id' => $viaje->id,
+                'seats' => $validated['seats'],
+                'status' => 'pending',
+            ]);
+
+            $viaje->decrement('seats_available', $validated['seats']);
+
+            return $reserva->load(['usuario', 'viaje.conductor']);
+        });
 
         return response()->json([
+
             'success' => true,
+
             'message' => 'Reserva creada correctamente',
+
             'data' => $reserva
+
         ], 201);
     }
 
@@ -73,7 +129,17 @@ class ReservaController extends Controller
             ], 404);
         }
 
-        $reserva->delete();
+        DB::transaction(function () use ($reserva) {
+            $viaje = ViajeCompartidos::where('id', $reserva->trip_id)
+                ->lockForUpdate()
+                ->first();
+
+            if ($viaje) {
+                $viaje->increment('seats_available', $reserva->seats);
+            }
+
+            $reserva->delete();
+        });
 
         return response()->json([
             'success' => true,
@@ -82,7 +148,7 @@ class ReservaController extends Controller
     }
     // ENDPOINT 10 - GET /api/users/crearreservas?user_id=10
     public function obtenerReservasPorUsuario(Request $request){
-        $user_id = $request->query('user_id');
+        $user_id = $request->user()?->id ?? $request->query('user_id');
 
         if (!$user_id) {
             return response()->json([
@@ -91,7 +157,10 @@ class ReservaController extends Controller
             ], 400);
         }
 
-        $reservas = \App\Models\Reserva::where('user_id', $user_id)->get();
+        $reservas = \App\Models\Reserva::with(['viaje.conductor', 'usuario'])
+            ->where('user_id', $user_id)
+            ->latest()
+            ->get();
 
         return response()->json([
             'ok' => true,
@@ -114,7 +183,10 @@ class ReservaController extends Controller
         $viajesIds = $ruta->viajes()->pluck('id'); // ids de ViajeCompartidos
 
         // Obtener todas las reservas de esos viajes
-        $reservas = Reserva::whereIn('trip_id', $viajesIds)->get();
+        $reservas = Reserva::with(['usuario', 'viaje'])
+            ->whereIn('trip_id', $viajesIds)
+            ->latest()
+            ->get();
 
         return response()->json([
             'success' => true,
