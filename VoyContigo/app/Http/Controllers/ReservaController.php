@@ -6,7 +6,7 @@ use App\Models\ViajeCompartidos;
 
 
 use App\Models\Reserva;
-use App\Models\ViajeCompartidos;
+//use App\Models\ViajeCompartidos;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -61,7 +61,6 @@ class ReservaController extends Controller
             ], 422);
         }
 
-<<<<<<< HEAD
         $user = $request->user();
         $validated = $validator->validated();
 
@@ -106,7 +105,6 @@ class ReservaController extends Controller
 
             return $reserva->load(['usuario', 'viaje.conductor']);
         });
-=======
         $viaje = ViajeCompartidos::find($data['trip_id']);
 
         if ($viaje->seats_available < $data['seats']) {
@@ -117,7 +115,6 @@ class ReservaController extends Controller
         }
 
         $reserva = Reserva::create($data);
->>>>>>> 45ae2367aea7adb36febd113736ca23f96cd0691
 
         $viaje->decrement('seats_available', $data['seats']);
 
@@ -145,7 +142,7 @@ class ReservaController extends Controller
             ], 404);
         }
 
-<<<<<<< HEAD
+
         DB::transaction(function () use ($reserva) {
             $viaje = ViajeCompartidos::where('id', $reserva->trip_id)
                 ->lockForUpdate()
@@ -157,11 +154,11 @@ class ReservaController extends Controller
 
             $reserva->delete();
         });
-=======
+
         $viaje = ViajeCompartidos::find($reserva->trip_id);
 
         $reserva->delete();
->>>>>>> 45ae2367aea7adb36febd113736ca23f96cd0691
+
 
         if ($viaje) {
             $viaje->increment('seats_available', $reserva->seats);

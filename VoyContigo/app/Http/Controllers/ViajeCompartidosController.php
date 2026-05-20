@@ -150,9 +150,9 @@ class ViajeCompartidosController extends Controller
     
     public function listar(Request $request)
     {
-<<<<<<< HEAD
+
         $viajes = ViajeCompartidos::with('conductor', 'ruta', 'reservas.usuario')->get();
-=======
+
         $viajes = ViajeCompartidos::with('conductor', 'ruta', 'reservas')
             ->orderBy('trip_datetime', 'desc')
             ->get();
@@ -177,7 +177,7 @@ class ViajeCompartidosController extends Controller
         if ($request->filled('fecha')) {
             $query->whereDate('trip_datetime', $request->fecha);
         }
->>>>>>> 45ae2367aea7adb36febd113736ca23f96cd0691
+
 
         return response()->json([
             'success' => true,
