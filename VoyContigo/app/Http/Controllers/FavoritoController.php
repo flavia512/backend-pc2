@@ -7,79 +7,77 @@ use Illuminate\Http\Request;
 
 class FavoritoController extends Controller
 {
-   // Endpoint 25: Eliminar de favoritos
-    // DELETE /api/favoritos/{route_id}?user_id=X
-    public function eliminarFavorito(Request $request)
+    // DELETE /favoritos?user_id=X&route_id=Y
+    public function eliminar(Request $request)
     {
         $request->validate([
-            'user_id' => 'required|exists:users,id',
+            'user_id'  => 'required|exists:users,id',
             'route_id' => 'required|exists:rutas,id',
         ]);
 
-        $userId = $request->query('user_id');
-        $routeId = $request->query('route_id');
+        $eliminado = Favorito::where('user_id', $request->query('user_id'))
+            ->where('route_id', $request->query('route_id'))
+            ->delete();
 
-        // Borrar usando where directamente
-        $deleted = Favorito::where('user_id', $userId)
-            ->where('route_id', $routeId)
-            ->delete(); // devuelve 0 si no borró nada
-
-        if (!$deleted) {
+        if (!$eliminado) {
             return response()->json([
-                'success' => false,
-                'message' => 'Favorito no encontrado'
+                'exito'   => false,
+                'mensaje' => 'Favorito no encontrado',
+                'datos'   => null,
             ], 404);
         }
 
         return response()->json([
-            'success' => true,
-            'message' => 'Favorito eliminado correctamente'
+            'exito'   => true,
+            'mensaje' => 'Favorito eliminado correctamente',
+            'datos'   => null,
         ], 200);
     }
-    
-    public function agregarFavorito(Request $request)
+
+    // POST /favoritos
+    public function agregar(Request $request)
     {
         $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'route_id' => 'required|exists:rutas,id'
+            'user_id'  => 'required|exists:users,id',
+            'route_id' => 'required|exists:rutas,id',
         ]);
 
-        $userId = $request->user_id;
-        $routeId = $request->route_id;
-
-        // comprobar duplicado
-        $favorito = Favorito::where('user_id', $userId)
-            ->where('route_id', $routeId)
+        $duplicado = Favorito::where('user_id', $request->user_id)
+            ->where('route_id', $request->route_id)
             ->first();
 
-        if ($favorito) {
+        if ($duplicado) {
             return response()->json([
-                'message' => 'Esta ruta ya está en favoritos'
+                'exito'   => false,
+                'mensaje' => 'Esta ruta ya está en favoritos',
+                'datos'   => null,
             ], 409);
         }
 
         $favorito = Favorito::create([
-            'user_id' => $userId,
-            'route_id' => $routeId
+            'user_id'  => $request->user_id,
+            'route_id' => $request->route_id,
         ]);
 
         return response()->json([
-            'message' => 'Ruta añadida a favoritos',
-            'data' => $favorito
+            'exito'   => true,
+            'mensaje' => 'Ruta añadida a favoritos',
+            'datos'   => $favorito,
         ], 201);
     }
 
-    // Endpoint 26: Listar favoritos del usuario autenticado
-    // GET /api/users/listar_favoritos
-    public function listarFavoritos(Request $request)
+    // GET /favoritos — favoritos del usuario autenticado
+    public function listar(Request $request)
     {
         $favoritos = Favorito::with('ruta')
             ->where('user_id', auth()->id())
             ->get();
 
         return response()->json([
-            'ok'        => true,
-            'favoritos' => $favoritos,
+            'exito'   => true,
+            'mensaje' => 'Favoritos obtenidos correctamente',
+            'datos'   => $favoritos,
         ], 200);
     }
 }
+

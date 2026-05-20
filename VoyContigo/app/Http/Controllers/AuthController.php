@@ -6,12 +6,10 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
+
 class AuthController extends Controller
 {
-    /**
-     * Registrar un nuevo usuario.
-     */
-    public function register(Request $request)
+    public function registro(Request $request)
     {
         $request->validate([
             'email'     => 'required|email|unique:users,email',
@@ -19,24 +17,21 @@ class AuthController extends Controller
             'password'  => 'required|string|min:6|confirmed',
         ]);
 
-        $user = User::create([
+        $usuario = User::create([
             'email'         => $request->email,
             'full_name'     => $request->full_name,
             'password_hash' => Hash::make($request->password),
         ]);
 
-        $token = JWTAuth::fromUser($user);
+        $token = JWTAuth::fromUser($usuario);
 
         return response()->json([
-            'message' => 'Usuario registrado correctamente',
-            'user'    => $user,
-            'token'   => $token,
+            'access_token' => $token,
+            'token_type'   => 'bearer',
+            'user'         => $usuario,
         ], 201);
     }
 
-    /**
-     * Iniciar sesión y obtener token JWT.
-     */
     public function login(Request $request)
     {
         $request->validate([
@@ -53,59 +48,37 @@ class AuthController extends Controller
             return response()->json(['error' => 'Credenciales incorrectas'], 401);
         }
 
-        return $this->respondWithToken($token);
+        return $this->responderConToken($token);
     }
 
-    /**
-     * Obtener el usuario autenticado.
-     */
-    public function me()
+    // GET /auth/yo
+    public function yo()
     {
-        return response()->json(auth('api')->user());
-    }
-
-    /**
-     * Actualizar el perfil del usuario autenticado.
-     */
-    public function actualizarPerfil(Request $request)
-    {
-        $usuario = auth('api')->user();
-        $request->validate([
-            'full_name' => 'sometimes|string|max:255',
-            'email'     => 'sometimes|email|unique:users,email,' . $usuario->id,
-        ]);
-
-        $usuario->update($request->validated());
-
         return response()->json([
-            'success' => true,
-            'message' => 'Perfil actualizado correctamente',
-            'data'    => $usuario,
+            'exito'   => true,
+            'mensaje' => 'Perfil obtenido correctamente',
+            'datos'   => auth('api')->user(),
         ]);
     }
 
-    /**
-     * Cerrar sesión (invalidar token).
-     */
+    // POST /auth/logout
     public function logout()
     {
         auth('api')->logout();
-
-        return response()->json(['message' => 'Sesión cerrada correctamente']);
+        return response()->json([
+            'exito'   => true,
+            'mensaje' => 'Sesión cerrada correctamente',
+            'datos'   => null,
+        ]);
     }
 
-    /**
-     * Refrescar el token JWT.
-     */
-    public function refresh()
+    // POST /auth/refrescar
+    public function refrescar()
     {
-        return $this->respondWithToken(auth('api')->refresh());
+        return $this->responderConToken(auth('api')->refresh());
     }
 
-    /**
-     * Estructura de respuesta con token.
-     */
-    protected function respondWithToken($token)
+    protected function responderConToken($token)
     {
         return response()->json([
             'access_token' => $token,

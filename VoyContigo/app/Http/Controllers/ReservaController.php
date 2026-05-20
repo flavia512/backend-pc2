@@ -1,15 +1,15 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\Ruta;
 
 use App\Models\Reserva;
+use App\Models\Ruta;
 use App\Models\ViajeCompartidos;
 use Illuminate\Http\Request;
 
 class ReservaController extends Controller
 {
-    // ENDPOINT 11: Actualizar reservas por usuario
+    // PUT /reservas/{reserva}
     public function actualizar(Request $request, Reserva $reserva)
     {
         $request->validate([
@@ -20,14 +20,14 @@ class ReservaController extends Controller
         $reserva->update($request->validated());
 
         return response()->json([
-            'success' => true,
-            'message' => 'Reserva actualizada correctamente',
-            'data' => $reserva
+            'exito'   => true,
+            'mensaje' => 'Reserva actualizada correctamente',
+            'datos'   => $reserva,
         ], 200);
     }
 
-    // ENDPOINT 12: Crear reserva por usuario
-    public function crearReserva(Request $request)
+    // POST /reservas
+    public function crear(Request $request)
     {
         $validated = $request->validate([
             'user_id' => 'required|exists:users,id',
@@ -42,28 +42,26 @@ class ReservaController extends Controller
 
         if ($viaje->seats_available < $validated['seats']) {
             return response()->json([
-                'success' => false,
-                'message' => 'No hay suficientes asientos disponibles'
+                'exito'   => false,
+                'mensaje' => 'No hay suficientes asientos disponibles',
+                'datos'   => null,
             ], 422);
         }
 
         $reserva = Reserva::create($validated);
-
         $viaje->decrement('seats_available', $validated['seats']);
 
         return response()->json([
-            'success' => true,
-            'message' => 'Reserva creada correctamente',
-            'data' => $reserva
+            'exito'   => true,
+            'mensaje' => 'Reserva creada correctamente',
+            'datos'   => $reserva,
         ], 201);
     }
 
-    // ENDPOINT 13: Eliminar reserva por ID
-    // DELETE api/users/eliminar_reserva/{reserva}
-    public function eliminarReserva(Reserva $reserva)
+    // DELETE /reservas/{reserva}
+    public function eliminar(Reserva $reserva)
     {
         $viaje = ViajeCompartidos::find($reserva->trip_id);
-
         $reserva->delete();
 
         if ($viaje) {
@@ -71,45 +69,43 @@ class ReservaController extends Controller
         }
 
         return response()->json([
-            'success' => true,
-            'message' => 'Reserva cancelada correctamente'
+            'exito'   => true,
+            'mensaje' => 'Reserva cancelada correctamente',
+            'datos'   => null,
         ], 200);
     }
-    // ENDPOINT 10 - GET /api/users/obtener_reservas
-    public function obtenerReservasPorUsuario(Request $request)
-    {
-        $request->validate([
-            'user_id' => 'required|exists:users,id',
-        ]);
 
-        $reservas = Reserva::where('user_id', $request->user_id)->get();
+    // GET /reservas — reservas del usuario autenticado
+    public function listar(Request $request)
+    {
+        $reservas = Reserva::where('user_id', auth()->id())->get();
 
         return response()->json([
-            'ok' => true,
-            'reservas' => $reservas
+            'exito'   => true,
+            'mensaje' => 'Reservas obtenidas correctamente',
+            'datos'   => $reservas,
         ], 200);
     }
 
-    // Endpoint 14: Obtener todas las reservas de una ruta
-    public function reservasPorRuta(Request $request)
+    // GET /admin/reservas/ruta?ruta_id=X
+    public function listarPorRuta(Request $request)
     {
-        // Validación: necesitamos el id de la ruta
         $request->validate([
-            'ruta_id' => 'required|exists:rutas,id'
+            'ruta_id' => 'required|exists:rutas,id',
         ]);
 
-        // Obtener la ruta
         $ruta = Ruta::find($request->ruta_id);
-
-        // Obtener todos los viajes asociados a la ruta
-        $viajesIds = $ruta->viajes()->pluck('id'); // ids de ViajeCompartidos
-
-        // Obtener todas las reservas de esos viajes
+        $viajesIds = $ruta->viajes()->pluck('id');
         $reservas = Reserva::whereIn('trip_id', $viajesIds)->get();
 
         return response()->json([
-            'success' => true,
-            'data' => $reservas
-        ]);
+            'exito'   => true,
+            'mensaje' => 'Reservas de la ruta obtenidas correctamente',
+            'datos'   => $reservas,
+        ], 200);
     }
 }
+
+    
+    
+

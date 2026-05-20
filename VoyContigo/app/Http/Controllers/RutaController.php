@@ -2,41 +2,50 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
+use App\Models\Prediccion;
 use App\Models\Ruta;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class RutaController extends Controller
 {
-    // ENDPOINT 5 - GET /api/users/obtener_rutas?user_id=10
-    public function obtenerRutasPorUsuario(Request $request) {
-        $rutas = Ruta::where('user_id', auth()->id())->get();
-        return response()->json($rutas, 200);
-    }
-
-    // ENDPOINT 8 - DELETE /api/users/eliminar_rutas/{ruta}
-    public function eliminar(Ruta $ruta) {
-        abort_if($ruta->user_id !== auth()->id(), 403, 'No autorizado');
-
-        $ruta->delete();
-
-        return response()->json(['message' => 'Ruta eliminada correctamente'], 200);
-    }
-
-    // ENDPOINT 3: Listado de todas las rutas
-    public function listar()
+    // GET /rutas — rutas del usuario autenticado
+    public function listarPorUsuario(Request $request)
     {
-        // Traemos todas las rutas junto con la info del usuario que las creó
-        $rutas = Ruta::with('usuario')->get();
-
+        $rutas = Ruta::where('user_id', auth()->id())->get();
         return response()->json([
-            'success' => true,
-            'data' => $rutas
+            'exito'   => true,
+            'mensaje' => 'Rutas obtenidas correctamente',
+            'datos'   => $rutas,
         ], 200);
     }
 
-    // ENDPOINT 7: Actualizar rutas
-    public function actualizar(Request $request, Ruta $ruta) {
+    // DELETE /rutas/{ruta}
+    public function eliminar(Ruta $ruta)
+    {
+        abort_if($ruta->user_id !== auth()->id(), 403, 'No autorizado');
+        $ruta->delete();
+        return response()->json([
+            'exito'   => true,
+            'mensaje' => 'Ruta eliminada correctamente',
+            'datos'   => null,
+        ], 200);
+    }
+
+    // GET /rutas/todas
+    public function listarTodas()
+    {
+        $rutas = Ruta::with('usuario')->get();
+        return response()->json([
+            'exito'   => true,
+            'mensaje' => 'Listado de rutas obtenido correctamente',
+            'datos'   => $rutas,
+        ], 200);
+    }
+
+    // PUT /rutas/{ruta}
+    public function actualizar(Request $request, Ruta $ruta)
+    {
         abort_if($ruta->user_id !== auth()->id(), 403, 'No autorizado');
 
         $request->validate([
@@ -55,25 +64,29 @@ class RutaController extends Controller
 
         $ruta->update($request->validated());
         return response()->json([
-            'success' => true,
-            'message' => 'Ruta actualizada correctamente',
-            'data' => $ruta ], 200);
+            'exito'   => true,
+            'mensaje' => 'Ruta actualizada correctamente',
+            'datos'   => $ruta,
+        ], 200);
     }
-    // ENDPOINT 9 - GET /api/users/obtener_predicciones?route_id=10
-    public function obtenerPredicciones(Request $request)
+
+    // GET /predicciones?route_id=X
+    public function listarPredicciones(Request $request)
     {
         $request->validate([
             'route_id' => 'required|exists:rutas,id',
         ]);
 
-        $predicciones = \App\Models\Prediccion::where('route_id', $request->route_id)->get();
+        $predicciones = Prediccion::where('route_id', $request->route_id)->get();
 
         return response()->json([
-            'ok' => true,
-            'predicciones' => $predicciones
+            'exito'   => true,
+            'mensaje' => 'Predicciones obtenidas correctamente',
+            'datos'   => $predicciones,
         ], 200);
     }
-    // Endpoint 6: Crear rutas
+
+    // POST /rutas
     public function crear(Request $request)
     {
         $request->validate([
@@ -106,9 +119,9 @@ class RutaController extends Controller
         ]);
 
         return response()->json([
-            'success' => true,
-            'message' => 'Ruta creada correctamente',
-            'data'    => $ruta
+            'exito'   => true,
+            'mensaje' => 'Ruta creada correctamente',
+            'datos'   => $ruta,
         ], 201);
     }
 }
