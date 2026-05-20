@@ -43,33 +43,6 @@ class RutaController extends Controller
         ], 200);
     }
 
-    // PUT /rutas/{ruta}
-    public function actualizar(Request $request, Ruta $ruta)
-    {
-        abort_if($ruta->user_id !== auth()->id(), 403, 'No autorizado');
-
-        $request->validate([
-            'nombre'       => 'sometimes|nullable|string|max:255',
-            'origin_text'  => 'sometimes|string|max:255',
-            'origin_lat'   => 'sometimes|numeric',
-            'origin_lng'   => 'sometimes|numeric',
-            'dest_text'    => 'sometimes|string|max:255',
-            'dest_lat'     => 'sometimes|numeric',
-            'dest_lng'     => 'sometimes|numeric',
-            'arrival_time' => 'sometimes|nullable|date_format:H:i',
-            'duration_min' => 'sometimes|nullable|integer|min:0',
-            'hora_salida'  => 'sometimes|nullable|date_format:H:i',
-            'pasa_por_m30' => 'sometimes|boolean',
-        ]);
-
-        $ruta->update($request->validated());
-        return response()->json([
-            'exito'   => true,
-            'mensaje' => 'Ruta actualizada correctamente',
-            'datos'   => $ruta,
-        ], 200);
-    }
-
     // GET /predicciones?route_id=X
     public function listarPredicciones(Request $request)
     {
@@ -84,6 +57,28 @@ class RutaController extends Controller
             'mensaje' => 'Predicciones obtenidas correctamente',
             'datos'   => $predicciones,
         ], 200);
+    }
+
+    // POST /predicciones
+    public function guardarPrediccion(Request $request)
+    {
+        $request->validate([
+            'route_id'    => 'required|exists:rutas,id',
+            'resultado'   => 'required|string',
+            'ml_model_id' => 'nullable|string|max:100',
+        ]);
+
+        $prediccion = Prediccion::create([
+            'route_id'    => $request->route_id,
+            'resultado'   => $request->resultado,
+            'ml_model_id' => $request->ml_model_id ?? 'fastapi-v1',
+        ]);
+
+        return response()->json([
+            'exito'   => true,
+            'mensaje' => 'Predicción guardada correctamente',
+            'datos'   => $prediccion,
+        ], 201);
     }
 
     // POST /rutas

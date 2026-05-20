@@ -33,7 +33,6 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/rutas/todas',     [RutaController::class, 'listarTodas']);
     Route::get('/rutas',           [RutaController::class, 'listarPorUsuario']);
     Route::post('/rutas',          [RutaController::class, 'crear']);
-    Route::put('/rutas/{ruta}',    [RutaController::class, 'actualizar']);
     Route::delete('/rutas/{ruta}', [RutaController::class, 'eliminar']);
 
     // Viajes (estáticas antes que paramétricas)
@@ -61,7 +60,8 @@ Route::middleware('auth:api')->group(function () {
     Route::delete('/favoritos', [FavoritoController::class, 'eliminar']);
 
     // Predicciones
-    Route::get('/predicciones', [RutaController::class, 'listarPredicciones']);
+    Route::get('/predicciones',  [RutaController::class, 'listarPredicciones']);
+    Route::post('/predicciones', [RutaController::class, 'guardarPrediccion']);
 });
 
 // ─── Rutas de administrador ────────────────────────────────────
