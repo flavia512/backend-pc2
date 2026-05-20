@@ -16,6 +16,7 @@ return new class extends Migration
             $table->timestamp('last_login_at')->nullable();
             $table->boolean('is_active')->default(true);
             $table->string('rol')->default('user');
+            $table->softDeletes();
             $table->timestamps();
 
         });

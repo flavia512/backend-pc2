@@ -25,6 +25,7 @@ return new class extends Migration
         $table->dateTime('for_datetime');
         $table->string('status')->default('pending');
 
+        $table->softDeletes();
         $table->timestamps();
         });
     }

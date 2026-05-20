@@ -33,6 +33,7 @@ return new class extends Migration
         $table->time('hora_salida')->nullable();
         $table->boolean('pasa_por_m30')->default(false);
 
+        $table->softDeletes();
         $table->timestamps();
         });
     }
