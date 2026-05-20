@@ -9,13 +9,13 @@ use Illuminate\Http\Request;
 class RutaController extends Controller
 {
     // ENDPOINT 5 - GET /api/users/obtener_rutas?user_id=10
-    public function getRutasByUser(Request $request) {
+    public function obtenerRutasPorUsuario(Request $request) {
         $rutas = Ruta::where('user_id', auth()->id())->get();
         return response()->json($rutas, 200);
     }
 
-    // ENDPOINT 8 - DELETE /api/users/delete_rutas/{id}
-    public function destroy($id) {
+    // ENDPOINT 8 - DELETE /api/users/eliminar_rutas/{id}
+    public function eliminar($id) {
         $ruta = Ruta::where('id', $id)->where('user_id', auth()->id())->first();
 
         if (!$ruta) {
@@ -28,7 +28,7 @@ class RutaController extends Controller
     }
 
     // ENDPOINT 3: Listado de todas las rutas
-    public function index()
+    public function listar()
     {
         // Traemos todas las rutas junto con la info del usuario que las creó
         $rutas = Ruta::with('usuario')->get();
@@ -40,11 +40,26 @@ class RutaController extends Controller
     }
 
     // ENDPOINT 7: Actualizar rutas
-    public function update(Request $request, $id) {
+    public function actualizar(Request $request, $id) {
         $ruta = Ruta::where('id', $id)->where('user_id', auth()->id())->first();
         if (!$ruta) {
             return response()->json(['success' => false, 'message' => 'Ruta no encontrada'], 404);
-        } // Actualizamos con los datos que vengan en el body de la petición
+        }
+
+        $request->validate([
+            'nombre'       => 'sometimes|nullable|string|max:255',
+            'origin_text'  => 'sometimes|string|max:255',
+            'origin_lat'   => 'sometimes|numeric',
+            'origin_lng'   => 'sometimes|numeric',
+            'dest_text'    => 'sometimes|string|max:255',
+            'dest_lat'     => 'sometimes|numeric',
+            'dest_lng'     => 'sometimes|numeric',
+            'arrival_time' => 'sometimes|nullable|date_format:H:i',
+            'duration_min' => 'sometimes|nullable|integer|min:0',
+            'hora_salida'  => 'sometimes|nullable|date_format:H:i',
+            'pasa_por_m30' => 'sometimes|boolean',
+        ]);
+
         $ruta->update($request->all());
         return response()->json([
             'success' => true,
@@ -54,16 +69,16 @@ class RutaController extends Controller
     // ENDPOINT 9 - Get /api/users/obtener_predicciones?route_id=10
     public function obtenerPredicciones(Request $request)
     {
-        $route_id = $request->query('route_id');
+        $idRuta = $request->query('route_id');
 
-        if (!$route_id) {
+        if (!$idRuta) {
             return response()->json([
                 'ok' => false,
                 'mensaje' => 'El parámetro route_id es obligatorio'
             ], 400);
         }
 
-        $predicciones = \App\Models\Prediccion::where('route_id', $route_id)->get();
+        $predicciones = \App\Models\Prediccion::where('route_id', $idRuta)->get();
 
         return response()->json([
             'ok' => true,
@@ -71,7 +86,7 @@ class RutaController extends Controller
         ], 200);
     }
     // Endpoint 6: Crear rutas
-    public function store(Request $request)
+    public function crear(Request $request)
     {
         $request->validate([
             'nombre'       => 'nullable|string|max:255',

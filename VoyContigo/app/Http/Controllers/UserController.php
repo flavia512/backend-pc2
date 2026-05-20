@@ -8,12 +8,12 @@ use Illuminate\Http\Request;
 class UserController extends Controller
 {
     // ENDPOINT 1 - GET /api/users/usuario?user_id=10
-    public function show() {
-        $user = auth()->user();
-        if (!$user) {
+    public function mostrar() {
+        $usuario = auth()->user();
+        if (!$usuario) {
             return response()->json(['message' => 'Usuario no autenticado'], 401);
         }
-        return response()->json($user, 200);
+        return response()->json($usuario, 200);
     }
 
     // ENDPOINT 22 - PUT /api/user/aumentar_puntos_usuario?cantidad=20
@@ -21,17 +21,17 @@ class UserController extends Controller
         $request->validate([
             'cantidad' => 'required|integer|min:1',
         ]);
-        $user = auth()->user();
-        $user->puntos += $request->cantidad;
-        $user->save();
+        $usuario = auth()->user();
+        $usuario->puntos += $request->cantidad;
+        $usuario->save();
         return response()->json([
             'message' => 'Puntos actualizados correctamente',
-            'puntos_totales' => $user->puntos
+            'puntos_totales' => $usuario->puntos
         ], 200);
     }
 
     // ENDPOINT 18: Editar datos de usuarios (Admin)
-    public function update(Request $request, $id)
+    public function actualizar(Request $request, $id)
     {
         $usuario = User::find($id);
 
@@ -64,16 +64,16 @@ class UserController extends Controller
     // DELETE api/admin/eliminarUsuarios/{id}
     public function eliminarUsuario($id)
     {
-        $user = User::find($id);
+        $usuario = User::find($id);
 
-        if (!$user) {
+        if (!$usuario) {
             return response()->json([
                 'success' => false,
                 'message' => 'Usuario no encontrado'
             ], 404);
         }
 
-        $user->delete();
+        $usuario->delete();
 
         return response()->json([
             'success' => true,
@@ -105,7 +105,7 @@ class UserController extends Controller
     }
 
 
-    public function store(Request $request)
+    public function crear(Request $request)
     {
         // Validación de los campos requeridos
         $request->validate([
@@ -118,7 +118,7 @@ class UserController extends Controller
         ]);
 
         // Crear el usuario en la base de datos
-        $user = User::create([
+        $usuario = User::create([
             'email'         => $request->email,
             'full_name'     => $request->full_name,
             'password_hash' => bcrypt($request->password), // almacenar contraseña hasheada
@@ -131,7 +131,7 @@ class UserController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Usuario creado correctamente',
-            'data'    => $user
+            'data'    => $usuario
         ], 201);
     }
 }

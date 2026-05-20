@@ -20,6 +20,11 @@ class ReservaController extends Controller
             return response()->json(['success' => false, 'message' => 'Reserva no encontrada'], 404);
         }
 
+        $request->validate([
+            'seats'  => 'sometimes|integer|min:1',
+            'status' => 'sometimes|string|in:pending,confirmed,cancelled',
+        ]);
+
         $reserva->update($request->all());
 
         return response()->json([

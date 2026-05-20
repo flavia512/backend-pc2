@@ -14,9 +14,9 @@ use App\Http\Controllers\ViajeCompartidosController;
 // ─── Rutas protegidas con JWT (auth:api) ─────────────────────
 Route::middleware('auth:api')->group(function () {
     // Rutas del usuario
-    Route::get('/users/obtener_rutas', [RutaController::class, 'getRutasByUser']);
-    Route::post('/users/crear_rutas', [RutaController::class, 'store']);
-    Route::delete('/users/delete_rutas/{id}', [RutaController::class, 'destroy']);
+    Route::get('/users/obtener_rutas', [RutaController::class, 'obtenerRutasPorUsuario']);
+    Route::post('/users/crear_rutas', [RutaController::class, 'crear']);
+    Route::delete('/users/eliminar_rutas/{id}', [RutaController::class, 'eliminar']);
 });
 
 // ─── Rutas públicas (Auth) ───────────────────────────────────
@@ -49,25 +49,25 @@ Route::post('/users/desactivar_alerta', [AlertaController::class, 'desactivar'])
 Route::post('/users/crear_reserva', [ReservaController::class, 'crearReserva']);
 
 // Endpoint 0: Crear usuario (POST)
-Route::post('/users', [UserController::class, 'store']);
+Route::post('/users', [UserController::class, 'crear']);
 
 // Endpoint 24: Añadir a favoritos (POST)
-Route::post('/users/agregarFavorito', [FavoritoController::class, 'agregarFavorito']);
+Route::post('/users/agregar_favorito', [FavoritoController::class, 'agregarFavorito']);
 
 // Endpoint 21: Crear viaje compartido (POST)
-Route::post('/driver/crear_viaje', [ViajeCompartidosController::class, 'crearViaje']);
+Route::post('/conductor/crear_viaje', [ViajeCompartidosController::class, 'crearViaje']);
 
 
 // Endpoint GET:
 
 // Endpoint 1 - Info del usuario (GET)
-Route::get('/users/usuario', [UserController::class, 'show']);
+Route::get('/users/usuario', [UserController::class, 'mostrar']);
 
 // Endpoint 3: Listado de todas las rutas (GET)
-Route::get('/rutas', [RutaController::class, 'index']);
+Route::get('/rutas', [RutaController::class, 'listar']);
 
 // Endpoint 14: Todas las reservas de una ruta (GET)
-Route::get('/driver/reservas', [ReservaController::class, 'reservasPorRuta']);
+Route::get('/conductor/reservas', [ReservaController::class, 'reservasPorRuta']);
 
 // Endpoint 17: Obtener datos de viaje compartido (GET)
 Route::get('/users/obtener_viajecompartido', [ViajeCompartidosController::class, 'obtenerViaje']);
@@ -99,20 +99,20 @@ Route::get('/user/buscar_viajes', [ViajeCompartidosController::class, 'buscarVia
 Route::put('/user/aumentar_puntos_usuario', [UserController::class, 'aumentarPuntos']);
 
 // Endpoint 7: Actualizar rutas (PUT)
-Route::put('/users/update_rutas/{id}', [RutaController::class, 'update']);
+Route::put('/users/actualizar_rutas/{id}', [RutaController::class, 'actualizar']);
 
 // Endpoint 11: Actualizar reservas por usuario (PUT)
 Route::put('/reservas/{id}', [ReservaController::class, 'update']);
 
 // Endpoint 18: Editar datos de usuarios (Admin) (PUT)
-Route::put('/admin/usuarios/{id}', [UserController::class, 'update']);
+Route::put('/admin/usuarios/{id}', [UserController::class, 'actualizar']);
 
 // Endpoint 19: Actualizar viaje compartido (PUT)
-Route::put('/driver/actualizar_viaje', [ViajeCompartidosController::class, 'actualizarViaje']);
+Route::put('/conductor/actualizar_viaje', [ViajeCompartidosController::class, 'actualizarViaje']);
 
 // Endpoint 23: Quitar puntos al usuario (PUT)
 Route::put('/user/quitar_puntos_usuario', [UserController::class, 'quitarPuntoUsuarios']);
- Route::post('/users/update', [UserController::class, 'update']);
+ Route::post('/users/actualizar', [UserController::class, 'actualizar']);
 
 // Endpoint DELETE:
 
@@ -123,7 +123,7 @@ Route::delete('/users/eliminar_reserva/{id}', [ReservaController::class, 'elimin
 Route::delete('/favoritos', [FavoritoController::class, 'eliminarFavorito']);
 
 // Endpoint 20: Eliminar viaje compartido (DELETE)
-Route::delete('/driver/eliminar_viaje/{idviaje}', [ViajeCompartidosController::class, 'eliminarViaje']);
+Route::delete('/conductor/eliminar_viaje/{idviaje}', [ViajeCompartidosController::class, 'eliminarViaje']);
 
 // Endpoint 4: Eliminar usuario (DELETE)
 Route::delete('/users/eliminar/{id}', [UserController::class, 'eliminarUsuario']);
