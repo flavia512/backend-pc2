@@ -10,14 +10,7 @@ use App\Http\Controllers\FavoritoController;
 use App\Http\Controllers\ReservaController;
 use App\Http\Controllers\ViajeCompartidosController;
 
-<<<<<<< HEAD
-/*
-|--------------------------------------------------------------------------
-| RUTAS PÚBLICAS (MODO INVITADO)
-|--------------------------------------------------------------------------
-| El usuario puede entrar sin iniciar sesión y consultar información
-*/
-=======
+
 
 // ─── Rutas protegidas con JWT (auth:api) ─────────────────────
 Route::middleware('auth:api')->group(function () {
@@ -70,7 +63,6 @@ Route::post('/driver/crear_viaje', [ViajeCompartidosController::class, 'crearVia
 
 // Endpoint 1 - Info del usuario (GET)
 Route::get('/users/usuario', [UserController::class, 'show']);
->>>>>>> 45ae2367aea7adb36febd113736ca23f96cd0691
 
 // Endpoint 3: Listado de todas las rutas (GET)
 Route::get('/rutas', [RutaController::class, 'index']);
@@ -78,13 +70,12 @@ Route::get('/rutas', [RutaController::class, 'index']);
 // Endpoint 17: Obtener datos de viaje compartido (GET)
 Route::get('/users/obtener_viajecompartido', [ViajeCompartidosController::class, 'obtenerViaje']);
 
-<<<<<<< HEAD
 // Endpoint listarViajes
 Route::get('/users/viajes_compartidos', [ViajeCompartidosController::class, 'listarViajes']);
 
 // Endpoint 14: Todas las reservas de una ruta (GET)
 Route::get('/driver/reservas', [ReservaController::class, 'reservasPorRuta']);
-=======
+
 // Endpoint 2: Lista de usuarios (GET)
 Route::get('/users/listaUsuarios', [UserController::class, 'listaUsuarios']);
 
@@ -140,7 +131,6 @@ Route::delete('/driver/eliminar_viaje/{idviaje}', [ViajeCompartidosController::c
 
 // Endpoint 4: Eliminar usuario (DELETE)
 Route::delete('/users/eliminar/{id}', [UserController::class, 'eliminarUsuario']);
->>>>>>> 45ae2367aea7adb36febd113736ca23f96cd0691
 
 });
 
