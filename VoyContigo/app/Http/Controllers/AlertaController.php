@@ -9,7 +9,11 @@ class AlertaController extends Controller
 {
     // ENDPOINT 15 - POST /api/users/desactivar_alerta?idruta=10
     public function desactivar(Request $request) {
-        $alertas = Alerta::where('route_id', $request->query('idruta'))
+        $request->validate([
+            'idruta' => 'required|exists:rutas,id',
+        ]);
+
+        $alertas = Alerta::where('route_id', $request->idruta)
                          ->where('status', 'activa')
                          ->get();
 
@@ -45,19 +49,14 @@ class AlertaController extends Controller
         ], 201);
     }
 
-    // ENDPOINT 16 - GET /api/admin/obtener_alerta_usuario?user_id=10
+    // ENDPOINT 16 - GET /api/users/obtener_alerta
     public function obtenerAlertaUsuario(Request $request)
     {
-        $user_id = $request->query('user_id');
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+        ]);
 
-        if (!$user_id) {
-            return response()->json([
-                'ok' => false,
-                'mensaje' => 'El parámetro user_id es obligatorio'
-            ], 400);
-        }
-
-        $alertas = \App\Models\Alerta::with('ruta')->where('user_id', $user_id)->get();
+        $alertas = Alerta::with('ruta')->where('user_id', $request->user_id)->get();
 
         return response()->json([
             'ok' => true,

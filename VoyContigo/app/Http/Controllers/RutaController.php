@@ -14,13 +14,9 @@ class RutaController extends Controller
         return response()->json($rutas, 200);
     }
 
-    // ENDPOINT 8 - DELETE /api/users/eliminar_rutas/{id}
-    public function eliminar($id) {
-        $ruta = Ruta::where('id', $id)->where('user_id', auth()->id())->first();
-
-        if (!$ruta) {
-            return response()->json(['message' => 'Ruta no encontrada'], 404);
-        }
+    // ENDPOINT 8 - DELETE /api/users/eliminar_rutas/{ruta}
+    public function eliminar(Ruta $ruta) {
+        abort_if($ruta->user_id !== auth()->id(), 403, 'No autorizado');
 
         $ruta->delete();
 
@@ -40,11 +36,8 @@ class RutaController extends Controller
     }
 
     // ENDPOINT 7: Actualizar rutas
-    public function actualizar(Request $request, $id) {
-        $ruta = Ruta::where('id', $id)->where('user_id', auth()->id())->first();
-        if (!$ruta) {
-            return response()->json(['success' => false, 'message' => 'Ruta no encontrada'], 404);
-        }
+    public function actualizar(Request $request, Ruta $ruta) {
+        abort_if($ruta->user_id !== auth()->id(), 403, 'No autorizado');
 
         $request->validate([
             'nombre'       => 'sometimes|nullable|string|max:255',
@@ -60,25 +53,20 @@ class RutaController extends Controller
             'pasa_por_m30' => 'sometimes|boolean',
         ]);
 
-        $ruta->update($request->all());
+        $ruta->update($request->validated());
         return response()->json([
             'success' => true,
             'message' => 'Ruta actualizada correctamente',
             'data' => $ruta ], 200);
     }
-    // ENDPOINT 9 - Get /api/users/obtener_predicciones?route_id=10
+    // ENDPOINT 9 - GET /api/users/obtener_predicciones?route_id=10
     public function obtenerPredicciones(Request $request)
     {
-        $idRuta = $request->query('route_id');
+        $request->validate([
+            'route_id' => 'required|exists:rutas,id',
+        ]);
 
-        if (!$idRuta) {
-            return response()->json([
-                'ok' => false,
-                'mensaje' => 'El parámetro route_id es obligatorio'
-            ], 400);
-        }
-
-        $predicciones = \App\Models\Prediccion::where('route_id', $idRuta)->get();
+        $predicciones = \App\Models\Prediccion::where('route_id', $request->route_id)->get();
 
         return response()->json([
             'ok' => true,

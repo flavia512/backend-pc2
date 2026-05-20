@@ -10,22 +10,14 @@ use Illuminate\Http\Request;
 class ReservaController extends Controller
 {
     // ENDPOINT 11: Actualizar reservas por usuario
-    public function update(Request $request, $id)
+    public function actualizar(Request $request, Reserva $reserva)
     {
-        // Llave primaria de reserva es reserva_id,
-        // pero Laravel con find() lo maneja porque lo definimos en el Modelo.
-        $reserva = Reserva::find($id);
-
-        if (!$reserva) {
-            return response()->json(['success' => false, 'message' => 'Reserva no encontrada'], 404);
-        }
-
         $request->validate([
             'seats'  => 'sometimes|integer|min:1',
             'status' => 'sometimes|string|in:pending,confirmed,cancelled',
         ]);
 
-        $reserva->update($request->all());
+        $reserva->update($request->validated());
 
         return response()->json([
             'success' => true,
@@ -35,40 +27,29 @@ class ReservaController extends Controller
     }
 
     // ENDPOINT 12: Crear reserva por usuario
-    // POST api/users/crear_reserva.php?user_id=10
     public function crearReserva(Request $request)
     {
-        $data = $request->all();
-
-        // status por defecto
-        $data['status'] = $data['status'] ?? 'pending';
-
-        $validator = \Validator::make($data, [
+        $validated = $request->validate([
             'user_id' => 'required|exists:users,id',
             'trip_id' => 'required|exists:viaje_compartidos,id',
-            'seats' => 'required|integer|min:1',
+            'seats'   => 'required|integer|min:1',
+            'status'  => 'sometimes|string|in:pending,confirmed,cancelled',
         ]);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Datos inválidos',
-                'errors' => $validator->errors()
-            ], 422);
-        }
+        $validated['status'] = $validated['status'] ?? 'pending';
 
-        $viaje = ViajeCompartidos::find($data['trip_id']);
+        $viaje = ViajeCompartidos::find($validated['trip_id']);
 
-        if ($viaje->seats_available < $data['seats']) {
+        if ($viaje->seats_available < $validated['seats']) {
             return response()->json([
                 'success' => false,
                 'message' => 'No hay suficientes asientos disponibles'
             ], 422);
         }
 
-        $reserva = Reserva::create($data);
+        $reserva = Reserva::create($validated);
 
-        $viaje->decrement('seats_available', $data['seats']);
+        $viaje->decrement('seats_available', $validated['seats']);
 
         return response()->json([
             'success' => true,
@@ -78,18 +59,9 @@ class ReservaController extends Controller
     }
 
     // ENDPOINT 13: Eliminar reserva por ID
-    // DELETE api/users/eliminar_reserva/{id}
-    public function eliminarReserva($id)
+    // DELETE api/users/eliminar_reserva/{reserva}
+    public function eliminarReserva(Reserva $reserva)
     {
-        $reserva = Reserva::find($id);
-
-        if (!$reserva) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Reserva no encontrada'
-            ], 404);
-        }
-
         $viaje = ViajeCompartidos::find($reserva->trip_id);
 
         $reserva->delete();
@@ -103,18 +75,14 @@ class ReservaController extends Controller
             'message' => 'Reserva cancelada correctamente'
         ], 200);
     }
-    // ENDPOINT 10 - GET /api/users/crearreservas?user_id=10
-    public function obtenerReservasPorUsuario(Request $request){
-        $user_id = $request->query('user_id');
+    // ENDPOINT 10 - GET /api/users/obtener_reservas
+    public function obtenerReservasPorUsuario(Request $request)
+    {
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+        ]);
 
-        if (!$user_id) {
-            return response()->json([
-                'ok' => false,
-                'mensaje' => 'El parámetro user_id es obligatorio'
-            ], 400);
-        }
-
-        $reservas = \App\Models\Reserva::where('user_id', $user_id)->get();
+        $reservas = Reserva::where('user_id', $request->user_id)->get();
 
         return response()->json([
             'ok' => true,

@@ -16,7 +16,7 @@ Route::middleware('auth:api')->group(function () {
     // Rutas del usuario
     Route::get('/users/obtener_rutas', [RutaController::class, 'obtenerRutasPorUsuario']);
     Route::post('/users/crear_rutas', [RutaController::class, 'crear']);
-    Route::delete('/users/eliminar_rutas/{id}', [RutaController::class, 'eliminar']);
+    Route::delete('/users/eliminar_rutas/{ruta}', [RutaController::class, 'eliminar']);
 });
 
 // ─── Rutas públicas (Auth) ───────────────────────────────────
@@ -29,6 +29,7 @@ Route::prefix('auth')->group(function () {
 Route::post('/login',    [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::get('/profile',   [AuthController::class, 'me'])->middleware('auth:api');
+Route::put('/profile',   [AuthController::class, 'actualizarPerfil'])->middleware('auth:api');
 
 // ─── Rutas protegidas (Auth) ─────────────────────────────────
 Route::middleware('auth:api')->prefix('auth')->group(function () {
@@ -99,13 +100,13 @@ Route::get('/user/buscar_viajes', [ViajeCompartidosController::class, 'buscarVia
 Route::put('/user/aumentar_puntos_usuario', [UserController::class, 'aumentarPuntos']);
 
 // Endpoint 7: Actualizar rutas (PUT)
-Route::put('/users/actualizar_rutas/{id}', [RutaController::class, 'actualizar']);
+Route::put('/users/actualizar_rutas/{ruta}', [RutaController::class, 'actualizar']);
 
 // Endpoint 11: Actualizar reservas por usuario (PUT)
-Route::put('/reservas/{id}', [ReservaController::class, 'update']);
+Route::put('/reservas/{reserva}', [ReservaController::class, 'actualizar']);
 
 // Endpoint 18: Editar datos de usuarios (Admin) (PUT)
-Route::put('/admin/usuarios/{id}', [UserController::class, 'actualizar']);
+Route::put('/admin/usuarios/{usuario}', [UserController::class, 'actualizar']);
 
 // Endpoint 19: Actualizar viaje compartido (PUT)
 Route::put('/conductor/actualizar_viaje', [ViajeCompartidosController::class, 'actualizarViaje']);
@@ -117,16 +118,16 @@ Route::put('/user/quitar_puntos_usuario', [UserController::class, 'quitarPuntoUs
 // Endpoint DELETE:
 
 // Endpoint 13: Eliminar reserva por ID (DELETE)
-Route::delete('/users/eliminar_reserva/{id}', [ReservaController::class, 'eliminarReserva']);
+Route::delete('/users/eliminar_reserva/{reserva}', [ReservaController::class, 'eliminarReserva']);
 
 // Endpoint 25: Eliminar de favoritos (DELETE)
 Route::delete('/favoritos', [FavoritoController::class, 'eliminarFavorito']);
 
 // Endpoint 20: Eliminar viaje compartido (DELETE)
-Route::delete('/conductor/eliminar_viaje/{idviaje}', [ViajeCompartidosController::class, 'eliminarViaje']);
+Route::delete('/conductor/eliminar_viaje/{viaje}', [ViajeCompartidosController::class, 'eliminarViaje']);
 
 // Endpoint 4: Eliminar usuario (DELETE)
-Route::delete('/users/eliminar/{id}', [UserController::class, 'eliminarUsuario']);
+Route::delete('/users/eliminar/{usuario}', [UserController::class, 'eliminarUsuario']);
 
 });
 

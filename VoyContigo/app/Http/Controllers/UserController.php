@@ -31,28 +31,15 @@ class UserController extends Controller
     }
 
     // ENDPOINT 18: Editar datos de usuarios (Admin)
-    public function actualizar(Request $request, $id)
+    public function actualizar(Request $request, User $usuario)
     {
-        $usuario = User::find($id);
-
-        if (!$usuario) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Usuario no encontrado'
-            ], 404);
-        }
-
         $request->validate([
             'full_name' => 'sometimes|string|max:255',
-            'email'     => 'sometimes|email|unique:users,email,' . $id,
+            'email'     => 'sometimes|email|unique:users,email,' . $usuario->id,
             'is_active' => 'sometimes|boolean',
         ]);
 
-        $usuario->update($request->only([
-            'full_name',
-            'email',
-            'is_active'
-        ]));
+        $usuario->update($request->validated());
 
         return response()->json([
             'success' => true,
@@ -61,18 +48,8 @@ class UserController extends Controller
         ], 200);
     }
     // ENDPOINT 4: Eliminar usuario con el ID especificado (DELETE)
-    // DELETE api/admin/eliminarUsuarios/{id}
-    public function eliminarUsuario($id)
+    public function eliminarUsuario(User $usuario)
     {
-        $usuario = User::find($id);
-
-        if (!$usuario) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Usuario no encontrado'
-            ], 404);
-        }
-
         $usuario->delete();
 
         return response()->json([

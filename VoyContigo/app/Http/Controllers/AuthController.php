@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
 use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 class AuthController extends Controller
 {
@@ -14,15 +13,11 @@ class AuthController extends Controller
      */
     public function register(Request $request)
     {
-        $validator = Validator::make($request->all(), [
+        $request->validate([
             'email'     => 'required|email|unique:users,email',
             'full_name' => 'required|string|max:255',
             'password'  => 'required|string|min:6|confirmed',
         ]);
-
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
 
         $user = User::create([
             'email'         => $request->email,
@@ -44,14 +39,10 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
-        $validator = Validator::make($request->all(), [
+        $request->validate([
             'email'    => 'required|email',
             'password' => 'required|string',
         ]);
-
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
 
         $credentials = [
             'email'    => $request->email,
@@ -71,6 +62,26 @@ class AuthController extends Controller
     public function me()
     {
         return response()->json(auth('api')->user());
+    }
+
+    /**
+     * Actualizar el perfil del usuario autenticado.
+     */
+    public function actualizarPerfil(Request $request)
+    {
+        $usuario = auth('api')->user();
+        $request->validate([
+            'full_name' => 'sometimes|string|max:255',
+            'email'     => 'sometimes|email|unique:users,email,' . $usuario->id,
+        ]);
+
+        $usuario->update($request->validated());
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Perfil actualizado correctamente',
+            'data'    => $usuario,
+        ]);
     }
 
     /**
