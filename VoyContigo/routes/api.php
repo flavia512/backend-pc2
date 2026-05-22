@@ -15,6 +15,11 @@ Route::prefix('auth')->group(function () {
     Route::post('/login',    [AuthController::class, 'login']);
 });
 
+// ─── Rutas públicas de lectura (sin autenticación) ─────────────
+Route::get('/viajes/buscar', [ViajeController::class, 'buscar']);
+Route::get('/viajes',        [ViajeController::class, 'listar']);
+Route::get('/rutas/todas',   [RutaController::class,  'listarTodas']);
+
 // ─── Rutas protegidas (usuario autenticado) ───────────────────
 Route::middleware('auth:api')->group(function () {
 
@@ -30,14 +35,11 @@ Route::middleware('auth:api')->group(function () {
     Route::put('/usuarios/puntos/quitar',   [UsuarioController::class, 'quitarPuntos']);
 
     // Rutas (estáticas antes que paramétricas)
-    Route::get('/rutas/todas',     [RutaController::class, 'listarTodas']);
     Route::get('/rutas',           [RutaController::class, 'listarPorUsuario']);
     Route::post('/rutas',          [RutaController::class, 'crear']);
     Route::delete('/rutas/{ruta}', [RutaController::class, 'eliminar']);
 
     // Viajes (estáticas antes que paramétricas)
-    Route::get('/viajes/buscar',        [ViajeController::class, 'buscar']);
-    Route::get('/viajes',               [ViajeController::class, 'listar']);
     Route::post('/viajes',              [ViajeController::class, 'crear']);
     Route::get('/viajes/{viaje}',       [ViajeController::class, 'obtener']);
     Route::put('/viajes/{viaje}',       [ViajeController::class, 'actualizar']);
