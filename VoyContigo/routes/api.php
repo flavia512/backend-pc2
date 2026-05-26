@@ -8,6 +8,7 @@ use App\Http\Controllers\AlertaController;
 use App\Http\Controllers\FavoritoController;
 use App\Http\Controllers\ReservaController;
 use App\Http\Controllers\ViajeController;
+use App\Http\Controllers\ConfiguracionController;
 
 // ─── Rutas públicas de autenticación ─────────────────────────
 Route::prefix('auth')->group(function () {
@@ -16,9 +17,10 @@ Route::prefix('auth')->group(function () {
 });
 
 // ─── Rutas públicas de lectura (sin autenticación) ─────────────
-Route::get('/viajes/buscar', [ViajeController::class, 'buscar']);
-Route::get('/viajes',        [ViajeController::class, 'listar']);
-Route::get('/rutas/todas',   [RutaController::class,  'listarTodas']);
+Route::get('/viajes/buscar',          [ViajeController::class,        'buscar']);
+Route::get('/viajes',                 [ViajeController::class,        'listar']);
+Route::get('/rutas/todas',            [RutaController::class,         'listarTodas']);
+Route::get('/configuracion/{clave}',  [ConfiguracionController::class,'mostrar']);
 
 // ─── Rutas protegidas (usuario autenticado) ───────────────────
 Route::middleware('auth:api')->group(function () {
@@ -73,7 +75,8 @@ Route::middleware(['auth:api', 'rol:admin'])->prefix('admin')->group(function ()
     Route::put('/usuarios/{usuario}',    [UsuarioController::class, 'actualizar']);
     Route::delete('/usuarios/{usuario}', [UsuarioController::class, 'eliminar']);
     Route::get('/reservas/ruta',         [ReservaController::class, 'listarPorRuta']);
-    Route::get('/estadisticas',          [UsuarioController::class, 'estadisticas']);
+    Route::get('/estadisticas',                  [UsuarioController::class,      'estadisticas']);
+    Route::put('/configuracion/{clave}',         [ConfiguracionController::class,'actualizar']);
 });
 
 
