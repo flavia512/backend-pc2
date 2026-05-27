@@ -43,42 +43,6 @@ class UsuarioController extends Controller
         ], 200);
     }
 
-    // PUT /usuarios/puntos/aumentar
-    public function aumentarPuntos(Request $request)
-    {
-        $request->validate([
-            'cantidad' => 'required|integer|min:1',
-        ]);
-
-        $usuario = auth()->user();
-        $usuario->puntos += $request->cantidad;
-        $usuario->save();
-
-        return response()->json([
-            'exito'   => true,
-            'mensaje' => 'Puntos actualizados correctamente',
-            'datos'   => ['puntos_totales' => $usuario->puntos],
-        ], 200);
-    }
-
-    // PUT /usuarios/puntos/quitar
-    public function quitarPuntos(Request $request)
-    {
-        $request->validate([
-            'cantidad' => 'required|integer|min:1',
-        ]);
-
-        $usuario = auth()->user();
-        $usuario->puntos = max(0, $usuario->puntos - $request->cantidad);
-        $usuario->save();
-
-        return response()->json([
-            'exito'   => true,
-            'mensaje' => 'Puntos descontados correctamente',
-            'datos'   => $usuario,
-        ], 200);
-    }
-
     // PUT /admin/usuarios/{usuario}
     public function actualizar(Request $request, User $usuario)
     {

@@ -33,8 +33,6 @@ Route::middleware('auth:api')->group(function () {
     // Perfil propio
     Route::get('/usuarios/yo',              [UsuarioController::class, 'obtenerPerfil']);
     Route::put('/usuarios/yo',              [UsuarioController::class, 'actualizarPerfil']);
-    Route::put('/usuarios/puntos/aumentar', [UsuarioController::class, 'aumentarPuntos']);
-    Route::put('/usuarios/puntos/quitar',   [UsuarioController::class, 'quitarPuntos']);
 
     // Rutas (estáticas antes que paramétricas)
     Route::get('/rutas',           [RutaController::class, 'listarPorUsuario']);

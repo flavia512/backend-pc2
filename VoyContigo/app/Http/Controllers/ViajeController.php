@@ -91,7 +91,10 @@ class ViajeController extends Controller
     // GET /viajes
     public function listar(Request $request)
     {
+        $userId = auth('api')->id();
+
         $viajes = ViajeCompartidos::with('conductor', 'ruta', 'reservas.usuario')
+            ->when($userId, fn($q) => $q->where('driver_user_id', '!=', $userId))
             ->orderBy('trip_datetime', 'desc')
             ->get();
 
@@ -105,7 +108,10 @@ class ViajeController extends Controller
     // GET /viajes/buscar
     public function buscar(Request $request)
     {
-        $query = ViajeCompartidos::with('conductor', 'ruta', 'reservas.usuario');
+        $userId = auth('api')->id();
+
+        $query = ViajeCompartidos::with('conductor', 'ruta', 'reservas.usuario')
+            ->when($userId, fn($q) => $q->where('driver_user_id', '!=', $userId));
 
         if ($request->filled('origin')) {
             $query->where('origin', 'like', '%' . $request->origin . '%');
