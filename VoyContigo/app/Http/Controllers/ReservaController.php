@@ -12,12 +12,12 @@ class ReservaController extends Controller
     // PUT /reservas/{reserva}
     public function actualizar(Request $request, Reserva $reserva)
     {
-        $request->validate([
+        $validated = $request->validate([
             'seats'  => 'sometimes|integer|min:1',
             'status' => 'sometimes|string|in:pending,confirmed,cancelled',
         ]);
 
-        $reserva->update($request->validated());
+        $reserva->update($validated);
 
         return response()->json([
             'exito'   => true,
@@ -78,7 +78,12 @@ class ReservaController extends Controller
     // GET /reservas — reservas del usuario autenticado
     public function listar(Request $request)
     {
-        $reservas = Reserva::where('user_id', auth()->id())->get();
+        $reservas = Reserva::with([
+                'viaje:id,origin,destiny,trip_datetime,seats_total,seats_available,status,driver_user_id',
+                'viaje.conductor:id,full_name,email',
+            ])
+            ->where('user_id', auth()->id())
+            ->get();
 
         return response()->json([
             'exito'   => true,
