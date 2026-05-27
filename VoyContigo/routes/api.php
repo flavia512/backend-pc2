@@ -75,6 +75,7 @@ Route::middleware(['auth:api', 'rol:admin'])->prefix('admin')->group(function ()
     Route::get('/reservas/ruta',         [ReservaController::class, 'listarPorRuta']);
     Route::get('/estadisticas',                  [UsuarioController::class,      'estadisticas']);
     Route::put('/configuracion/{clave}',         [ConfiguracionController::class,'actualizar']);
+    Route::post('/configuracion/logo',            [ConfiguracionController::class,'subirLogo']);
 });
 
 
