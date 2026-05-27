@@ -80,6 +80,7 @@ class ViajeController extends Controller
     // GET /viajes/{viaje}
     public function obtener(ViajeCompartidos $viaje)
     {
+        $viaje->load('reservas.usuario');
         return response()->json([
             'exito'   => true,
             'mensaje' => 'Viaje obtenido correctamente',

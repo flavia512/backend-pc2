@@ -29,12 +29,12 @@ class UsuarioController extends Controller
     public function actualizarPerfil(Request $request)
     {
         $usuario = auth()->user();
-        $request->validate([
+        $validados = $request->validate([
             'full_name' => 'sometimes|string|max:255',
             'email'     => 'sometimes|email|unique:users,email,' . $usuario->id,
         ]);
 
-        $usuario->update($request->validated());
+        $usuario->update($validados);
 
         return response()->json([
             'exito'   => true,
@@ -82,14 +82,14 @@ class UsuarioController extends Controller
     // PUT /admin/usuarios/{usuario}
     public function actualizar(Request $request, User $usuario)
     {
-        $request->validate([
+        $validados = $request->validate([
             'full_name' => 'sometimes|string|max:255',
             'email'     => 'sometimes|email|unique:users,email,' . $usuario->id,
             'is_active' => 'sometimes|boolean',
             'rol'       => 'sometimes|string|in:admin,user',
         ]);
 
-        $usuario->update($request->validated());
+        $usuario->update($validados);
 
         return response()->json([
             'exito'   => true,
