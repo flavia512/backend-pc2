@@ -13,7 +13,7 @@ use App\Http\Controllers\ConfiguracionController;
 // ─── Rutas públicas de autenticación ─────────────────────────
 Route::prefix('auth')->group(function () {
     Route::post('/registro', [AuthController::class, 'registro']);
-    Route::post('/login',    [AuthController::class, 'login']);
+    Route::post('/login',    [AuthController::class, 'iniciarSesion']);
 });
 
 // ─── Rutas públicas de lectura (sin autenticación) ─────────────
@@ -26,7 +26,7 @@ Route::get('/configuracion/{clave}',  [ConfiguracionController::class,'mostrar']
 Route::middleware('auth:api')->group(function () {
 
     // Auth
-    Route::post('/auth/logout',    [AuthController::class, 'logout']);
+    Route::post('/auth/logout',    [AuthController::class, 'cerrarSesion']);
     Route::post('/auth/refrescar', [AuthController::class, 'refrescar']);
     Route::get('/auth/yo',         [AuthController::class, 'yo']);
 
@@ -34,12 +34,12 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/usuarios/yo',              [UsuarioController::class, 'obtenerPerfil']);
     Route::put('/usuarios/yo',              [UsuarioController::class, 'actualizarPerfil']);
 
-    // Rutas (estáticas antes que paramétricas)
+    // Rutas
     Route::get('/rutas',           [RutaController::class, 'listarPorUsuario']);
     Route::post('/rutas',          [RutaController::class, 'crear']);
     Route::delete('/rutas/{ruta}', [RutaController::class, 'eliminar']);
 
-    // Viajes (estáticas antes que paramétricas)
+    // Viajes 
     Route::post('/viajes',              [ViajeController::class, 'crear']);
     Route::get('/viajes/{viaje}',       [ViajeController::class, 'obtener']);
     Route::put('/viajes/{viaje}',       [ViajeController::class, 'actualizar']);
@@ -51,7 +51,7 @@ Route::middleware('auth:api')->group(function () {
     Route::put('/reservas/{reserva}',    [ReservaController::class, 'actualizar']);
     Route::delete('/reservas/{reserva}', [ReservaController::class, 'eliminar']);
 
-    // Alertas (estáticas antes que paramétricas)
+    // Alertas 
     Route::put('/alertas/desactivar', [AlertaController::class, 'desactivar']);
     Route::get('/alertas',            [AlertaController::class, 'listar']);
     Route::post('/alertas',           [AlertaController::class, 'crear']);

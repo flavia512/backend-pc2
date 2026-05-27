@@ -30,13 +30,13 @@ class ReservaController extends Controller
     public function crear(Request $request)
     {
         $validated = $request->validate([
-            'user_id' => 'required|exists:users,id',
             'trip_id' => 'required|exists:viaje_compartidos,id',
             'seats'   => 'required|integer|min:1',
             'status'  => 'sometimes|string|in:pending,confirmed,cancelled',
         ]);
 
-        $validated['status'] = $validated['status'] ?? 'pending';
+        $validated['user_id'] = auth()->id();
+        $validated['status']  = $validated['status'] ?? 'pending';
 
         $viaje = ViajeCompartidos::find($validated['trip_id']);
 

@@ -32,7 +32,7 @@ class AuthController extends Controller
         ], 201);
     }
 
-    public function login(Request $request)
+    public function iniciarSesion(Request $request)
     {
         $request->validate([
             'email'    => 'required|email',
@@ -62,7 +62,7 @@ class AuthController extends Controller
     }
 
     // POST /auth/logout
-    public function logout()
+    public function cerrarSesion()
     {
         auth('api')->logout();
         return response()->json([

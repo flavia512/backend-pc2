@@ -7,15 +7,14 @@ use Illuminate\Http\Request;
 
 class FavoritoController extends Controller
 {
-    // DELETE /favoritos?user_id=X&route_id=Y
+    // DELETE /favoritos?route_id=Y
     public function eliminar(Request $request)
     {
         $request->validate([
-            'user_id'  => 'required|exists:users,id',
             'route_id' => 'required|exists:rutas,id',
         ]);
 
-        $eliminado = Favorito::where('user_id', $request->query('user_id'))
+        $eliminado = Favorito::where('user_id', auth()->id())
             ->where('route_id', $request->query('route_id'))
             ->delete();
 
@@ -38,11 +37,10 @@ class FavoritoController extends Controller
     public function agregar(Request $request)
     {
         $request->validate([
-            'user_id'  => 'required|exists:users,id',
             'route_id' => 'required|exists:rutas,id',
         ]);
 
-        $duplicado = Favorito::where('user_id', $request->user_id)
+        $duplicado = Favorito::where('user_id', auth()->id())
             ->where('route_id', $request->route_id)
             ->first();
 
@@ -55,7 +53,7 @@ class FavoritoController extends Controller
         }
 
         $favorito = Favorito::create([
-            'user_id'  => $request->user_id,
+            'user_id'  => auth()->id(),
             'route_id' => $request->route_id,
         ]);
 
