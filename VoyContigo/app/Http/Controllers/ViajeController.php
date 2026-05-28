@@ -77,6 +77,22 @@ class ViajeController extends Controller
         ], 200);
     }
 
+    // GET /viajes/mis-viajes
+    public function misViajes()
+    {
+        $idUsuario = auth('api')->id();
+        if (!$idUsuario) {
+            return response()->json(['exito' => false, 'mensaje' => 'No autorizado.', 'datos' => null], 401);
+        }
+
+        $viajes = ViajeCompartidos::with('reservas.usuario')
+            ->where('driver_user_id', $idUsuario)
+            ->orderBy('trip_datetime', 'desc')
+            ->get();
+
+        return response()->json(['exito' => true, 'datos' => $viajes], 200);
+    }
+
     // GET /viajes/{viaje}
     public function obtener(ViajeCompartidos $viaje)
     {

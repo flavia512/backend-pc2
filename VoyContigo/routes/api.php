@@ -40,6 +40,7 @@ Route::middleware('auth:api')->group(function () {
     Route::delete('/rutas/{ruta}', [RutaController::class, 'eliminar']);
 
     // Viajes 
+    Route::get('/viajes/mis-viajes',    [ViajeController::class, 'misViajes']);
     Route::post('/viajes',              [ViajeController::class, 'crear']);
     Route::get('/viajes/{viaje}',       [ViajeController::class, 'obtener']);
     Route::put('/viajes/{viaje}',       [ViajeController::class, 'actualizar']);
