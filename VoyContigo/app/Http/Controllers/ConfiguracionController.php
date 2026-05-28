@@ -38,14 +38,14 @@ class ConfiguracionController extends Controller
         // Eliminar logo anterior si existe
         $anterior = Configuracion::where('clave', 'logo_url')->first();
         if ($anterior) {
-            $oldPath = str_replace(url('storage') . '/', '', $anterior->valor);
-            if (Storage::disk('public')->exists($oldPath)) {
-                Storage::disk('public')->delete($oldPath);
+            $rutaAntigua = str_replace(url('storage') . '/', '', $anterior->valor);
+            if (Storage::disk('public')->exists($rutaAntigua)) {
+                Storage::disk('public')->delete($rutaAntigua);
             }
         }
 
-        $path = $request->file('logo')->store('logos', 'public');
-        $url  = url('storage/' . $path);
+        $rutaArchivo = $request->file('logo')->store('logos', 'public');
+        $url  = url('storage/' . $rutaArchivo);
 
         Configuracion::updateOrCreate(
             ['clave' => 'logo_url'],

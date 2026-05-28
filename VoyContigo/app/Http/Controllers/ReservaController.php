@@ -12,12 +12,12 @@ class ReservaController extends Controller
     // PUT /reservas/{reserva}
     public function actualizar(Request $request, Reserva $reserva)
     {
-        $validated = $request->validate([
+        $datos = $request->validate([
             'seats'  => 'sometimes|integer|min:1',
             'status' => 'sometimes|string|in:pending,confirmed,cancelled',
         ]);
 
-        $reserva->update($validated);
+        $reserva->update($datos);
 
         return response()->json([
             'exito'   => true,
@@ -29,18 +29,18 @@ class ReservaController extends Controller
     // POST /reservas
     public function crear(Request $request)
     {
-        $validated = $request->validate([
+        $datos = $request->validate([
             'trip_id' => 'required|exists:viaje_compartidos,id',
             'seats'   => 'required|integer|min:1',
             'status'  => 'sometimes|string|in:pending,confirmed,cancelled',
         ]);
 
-        $validated['user_id'] = auth()->id();
-        $validated['status']  = $validated['status'] ?? 'pending';
+        $datos['user_id'] = auth()->id();
+        $datos['status']  = $datos['status'] ?? 'pending';
 
-        $viaje = ViajeCompartidos::find($validated['trip_id']);
+        $viaje = ViajeCompartidos::find($datos['trip_id']);
 
-        if ($viaje->seats_available < $validated['seats']) {
+        if ($viaje->seats_available < $datos['seats']) {
             return response()->json([
                 'exito'   => false,
                 'mensaje' => 'No hay suficientes asientos disponibles',
@@ -48,8 +48,8 @@ class ReservaController extends Controller
             ], 422);
         }
 
-        $reserva = Reserva::create($validated);
-        $viaje->decrement('seats_available', $validated['seats']);
+        $reserva = Reserva::create($datos);
+        $viaje->decrement('seats_available', $datos['seats']);
 
         return response()->json([
             'exito'   => true,
@@ -100,8 +100,8 @@ class ReservaController extends Controller
         ]);
 
         $ruta = Ruta::find($request->ruta_id);
-        $viajesIds = $ruta->viajes()->pluck('id');
-        $reservas = Reserva::whereIn('trip_id', $viajesIds)->get();
+        $idsViajes = $ruta->viajes()->pluck('id');
+        $reservas = Reserva::whereIn('trip_id', $idsViajes)->get();
 
         return response()->json([
             'exito'   => true,
@@ -110,7 +110,3 @@ class ReservaController extends Controller
         ], 200);
     }
 }
-
-    
-    
-

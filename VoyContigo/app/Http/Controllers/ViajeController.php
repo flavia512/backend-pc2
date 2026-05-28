@@ -11,15 +11,15 @@ class ViajeController extends Controller
     // POST /viajes
     public function crear(Request $request)
     {
-        $validated = $request->validate([
+        $datos = $request->validate([
             'route_id'        => 'required|exists:rutas,id',
             'trip_datetime'   => 'required|date',
             'seats_total'     => 'required|integer|min:1',
             'seats_available' => 'required|integer|min:0',
         ]);
 
-        $userId = auth('api')->id();
-        if (!$userId) {
+        $idUsuario = auth('api')->id();
+        if (!$idUsuario) {
             return response()->json([
                 'exito'   => false,
                 'mensaje' => 'No autorizado.',
@@ -27,14 +27,14 @@ class ViajeController extends Controller
             ], 401);
         }
 
-        $validated['driver_user_id'] = $userId;
-        $validated['status']         = 'activo';
+        $datos['driver_user_id'] = $idUsuario;
+        $datos['status']         = 'activo';
 
-        $ruta               = Ruta::find($validated['route_id']);
-        $validated['origin']  = $ruta->origin_text;
-        $validated['destiny'] = $ruta->dest_text;
+        $ruta               = Ruta::find($datos['route_id']);
+        $datos['origin']  = $ruta->origin_text;
+        $datos['destiny'] = $ruta->dest_text;
 
-        $viaje = ViajeCompartidos::create($validated);
+        $viaje = ViajeCompartidos::create($datos);
 
         return response()->json([
             'exito'   => true,
@@ -91,10 +91,10 @@ class ViajeController extends Controller
     // GET /viajes
     public function listar(Request $request)
     {
-        $userId = auth('api')->id();
+        $idUsuario = auth('api')->id();
 
         $viajes = ViajeCompartidos::with('conductor', 'ruta', 'reservas.usuario')
-            ->when($userId, fn($q) => $q->where('driver_user_id', '!=', $userId))
+            ->when($idUsuario, fn($q) => $q->where('driver_user_id', '!=', $idUsuario))
             ->orderBy('trip_datetime', 'desc')
             ->get();
 
@@ -108,27 +108,27 @@ class ViajeController extends Controller
     // GET /viajes/buscar
     public function buscar(Request $request)
     {
-        $userId = auth('api')->id();
+        $idUsuario = auth('api')->id();
 
-        $query = ViajeCompartidos::with('conductor', 'ruta', 'reservas.usuario')
-            ->when($userId, fn($q) => $q->where('driver_user_id', '!=', $userId));
+        $consulta = ViajeCompartidos::with('conductor', 'ruta', 'reservas.usuario')
+            ->when($idUsuario, fn($q) => $q->where('driver_user_id', '!=', $idUsuario));
 
         if ($request->filled('origin')) {
-            $query->where('origin', 'like', '%' . $request->origin . '%');
+            $consulta->where('origin', 'like', '%' . $request->origin . '%');
         }
 
         if ($request->filled('destiny')) {
-            $query->where('destiny', 'like', '%' . $request->destiny . '%');
+            $consulta->where('destiny', 'like', '%' . $request->destiny . '%');
         }
 
         if ($request->filled('fecha')) {
-            $query->whereDate('trip_datetime', $request->fecha);
+            $consulta->whereDate('trip_datetime', $request->fecha);
         }
 
         return response()->json([
             'exito'   => true,
             'mensaje' => 'Búsqueda realizada correctamente',
-            'datos'   => $query->orderBy('trip_datetime', 'desc')->get(),
+            'datos'   => $consulta->orderBy('trip_datetime', 'desc')->get(),
         ], 200);
     }
 }

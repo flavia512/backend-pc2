@@ -60,7 +60,7 @@ class AlertaController extends Controller
         ], 201);
     }
 
-    // GET /alertas â€” alertas del usuario autenticado
+    // GET /alertas ” alertas del usuario autenticado
     public function listar(Request $request)
     {
         $alertas = Alerta::with('ruta')->where('user_id', auth()->id())->get();

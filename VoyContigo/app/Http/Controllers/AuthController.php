@@ -39,13 +39,17 @@ class AuthController extends Controller
             'password' => 'required|string',
         ]);
 
-        $credentials = [
+        $credenciales = [
             'email'    => $request->email,
             'password' => $request->password,
         ];
 
-        if (!$token = auth('api')->attempt($credentials)) {
-            return response()->json(['error' => 'Credenciales incorrectas'], 401);
+        if (!$token = auth('api')->attempt($credenciales)) {
+            return response()->json([
+                'exito'   => false,
+                'mensaje' => 'Credenciales incorrectas',
+                'datos'   => null,
+            ], 401);
         }
 
         return $this->responderConToken($token);
